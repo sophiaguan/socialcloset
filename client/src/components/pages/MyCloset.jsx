@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import "../../utilities.css";
 
@@ -46,12 +46,6 @@ const MyCloset = () => {
 
     return (
         <div>
-            <nav style={{ marginBottom: "20px" }}>
-                <Link to="/" style={{ textDecoration: "none", color: "#007bff" }}>
-                    ← Back to Home
-                </Link>
-            </nav>
-
             <h1>My Closet</h1>
             <p>Manage your wardrobe and upload new clothes to your collection.</p>
 
