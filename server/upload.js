@@ -15,6 +15,7 @@ async function uploadImage(filePath, clothingType, fileName) {
     Key: `${clothingType}/${fileName}`, // subfolder based on type
     Body: fileStream,
     ContentType: "image/jpeg",
+    ACL: "public-read",
   };
 
   try {
