@@ -16,6 +16,8 @@ const path = require("path");
 // import models so we can interact with the database
 const User = require("./models/user");
 
+const { uploadAllFromTemp } = require("./upload"); 
+
 // import authentication library
 const auth = require("./auth");
 
@@ -35,7 +37,7 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ 
+const upload = multer({
   storage: storage,
   limits: {
     fileSize: 10 * 1024 * 1024 // 10MB limit
@@ -64,6 +66,33 @@ router.post("/initsocket", (req, res) => {
 // | write your API methods below!|
 // |------------------------------|
 
+const generateCode = () => {
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let code = '';
+  for (let i = 0; i < 4; i++) {
+    code += letters.charAt(Math.floor(Math.random() * letters.length));
+  }
+  return code;
+};
+
+router.post('/creategroup', async (req, res) => {
+  const groupId = generateCode();
+  const group = new Group({ name: req.body.name, code: groupId, users: [req.user.googleid]});
+  await group.save();
+  res.json({ groupId });
+});
+
+// Upload all processed images in /temp to S3
+router.post("/upload-to-s3", async (req, res) => {
+  try {
+    await uploadAllFromTemp();
+    res.json({ success: true, message: "All images uploaded to S3" });
+  } catch (err) {
+    console.error("❌ Error uploading to S3:", err);
+    res.status(500).json({ success: false, error: "S3 upload failed" });
+  }
+});
+
 // Upload clothing image and process it
 router.post("/upload-clothing", upload.single('image'), async (req, res) => {
   try {
@@ -85,11 +114,11 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
 
     // Call Python script directly (more reliable than replicating API call)
     const { spawn } = require('child_process');
-    
+
     console.log("Calling Python script to process image...");
     console.log("Input file:", tempFilePath);
     console.log("Output file:", outputPath);
-    
+
     // Call the Python script with the temp file (using conda Python)
     const pythonProcess = spawn('python', [
       path.join(__dirname, '..', 'pixian.py'),
@@ -164,15 +193,15 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
   } catch (error) {
     console.error("Error processing image:", error);
     console.error("Error stack:", error.stack);
-    
+
     // Clean up temp file if it exists
     if (req.file && fs.existsSync(req.file.path)) {
       console.log("Cleaning up temp file:", req.file.path);
       fs.unlinkSync(req.file.path);
     }
-    
-    res.status(500).json({ 
-      error: "Failed to process image", 
+
+    res.status(500).json({
+      error: "Failed to process image",
       details: error.message,
       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
