@@ -3,7 +3,7 @@ import fs from "fs"; // For Node.js, local file
 
 const s3 = new S3Client({ region: "us-east-1" });
 
-async function uploadAIImage(filePath, clothingType, fileName) {
+async function uploadImage(filePath, clothingType, fileName) {
   // filePath: local path from AI pipeline output
   // clothingType: "tops", "bottoms", "dresses"
   // fileName: "shirt1.jpg", etc.
@@ -27,4 +27,4 @@ async function uploadAIImage(filePath, clothingType, fileName) {
 }
 
 // Example usage
-uploadAIImage("./output_ai_image.jpg", "tops", "shirt1.jpg");
+uploadImage("./output_ai_image.jpg", "tops", "shirt1.jpg");
