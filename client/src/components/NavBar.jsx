@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 
 import "../utilities.css";
 
-const Navigation = () => {
+const NavBar = () => {
     const location = useLocation();
 
     const navItems = [
@@ -71,4 +71,4 @@ const Navigation = () => {
     );
 };
 
-export default Navigation;
+export default NavBar;
