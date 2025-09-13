@@ -1,8 +1,17 @@
+import dotenv from "dotenv";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import fs from "fs";
 import path from "path";
 
-const s3 = new S3Client({ region: "us-east-1" });
+dotenv.config();
+
+const s3 = new S3Client({
+    region: "us-east-1",
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    },
+  });
 
 async function uploadImage(filePath, clothingType, fileName) {
   // filePath: local path from AI pipeline output
@@ -15,7 +24,8 @@ async function uploadImage(filePath, clothingType, fileName) {
     Bucket: "socialcloset",
     Key: `${clothingType}/${fileName}`, // subfolder based on type
     Body: fileStream,
-    ContentType: "image/png",
+    ContentType: "image/jpeg",
+    ACL: "public-read",
   };
 
   try {
