@@ -26,6 +26,8 @@ function getOrCreateUser(user) {
     const newUser = new User({
       name: user.name,
       googleid: user.sub,
+      tops: ["https://socialcloset.s3.us-east-2.amazonaws.com/tops/default+top.png"],
+      bottoms: ["https://socialcloset.s3.us-east-2.amazonaws.com/bottoms/default+bottom.png"],
     });
 
     return newUser.save();
