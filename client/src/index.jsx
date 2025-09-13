@@ -1,7 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./components/App";
-import Skeleton from "./components/pages/Skeleton";
+import Home from "./components/pages/Home";
+import MyCloset from "./components/pages/MyCloset";
+import ImageEdit from "./components/pages/UploadClothes";
 import NotFound from "./components/pages/NotFound";
 
 import {
@@ -18,7 +20,9 @@ const GOOGLE_CLIENT_ID = "808705657770-8eqasropsl9hjqg3cvk1fo7t774lcjih.apps.goo
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route errorElement={<NotFound />} element={<App />}>
-      <Route path="/" element={<Skeleton />}/>
+      <Route path="/" element={<Home />} />
+      <Route path="/my-closet" element={<MyCloset />} />
+      <Route path="/edit-image" element={<ImageEdit />} />
     </Route>
   )
 )
