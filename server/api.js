@@ -78,39 +78,51 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
     console.log("Processing image:", tempFilePath);
     console.log("Clothing details:", { imageName, clothingType });
 
-    // Call Pixian.ai API directly
-    const form = new FormData();
-    form.append('image', fs.createReadStream(tempFilePath));
-    form.append('format', 'PNG');
-    form.append('quality', 'high');
-    form.append('test', 'true');
-
-    console.log("Calling Pixian.ai API with test mode enabled...");
-    console.log("Form data fields:", {
-      format: 'PNG',
-      quality: 'high', 
-      test: 'true'
-    });
+    // Call Python script directly (more reliable than replicating API call)
+    const { spawn } = require('child_process');
     
-    const response = await fetch('https://api.pixian.ai/api/v2/remove-background', {
-      method: 'POST',
-      body: form,
-      headers: {
-        'Authorization': 'Basic ' + Buffer.from('pxhkyis8zj8cysa:qnuag772k0brml0dj8lfv469a38sthmtq7e4vses7v035kccpc54').toString('base64')
-      }
+    console.log("Calling Python script to process image...");
+    console.log("Input file:", tempFilePath);
+    console.log("Output file:", outputPath);
+    
+    // Call the Python script with the temp file (using conda Python)
+    const pythonProcess = spawn('python', [
+      path.join(__dirname, '..', 'pixian.py'),
+      tempFilePath,
+      outputPath
+    ]);
+
+    // Wait for Python script to complete
+    await new Promise((resolve, reject) => {
+      pythonProcess.on('close', (code) => {
+        if (code === 0) {
+          console.log("✅ Python script completed successfully");
+          resolve();
+        } else {
+          console.error(`❌ Python script failed with code ${code}`);
+          reject(new Error(`Python script failed with exit code ${code}`));
+        }
+      });
+
+      pythonProcess.on('error', (error) => {
+        console.error("❌ Error running Python script:", error);
+        reject(error);
+      });
+
+      // Log Python output
+      pythonProcess.stdout.on('data', (data) => {
+        console.log("Python output:", data.toString());
+      });
+
+      pythonProcess.stderr.on('data', (data) => {
+        console.error("Python error:", data.toString());
+      });
     });
 
-    console.log("Pixian API response status:", response.status);
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Pixian API error response:", errorText);
-      throw new Error(`Pixian API error: ${response.status} ${response.statusText} - ${errorText}`);
+    // Check if the output file was created
+    if (!fs.existsSync(outputPath)) {
+      throw new Error("Python script did not create output file");
     }
-
-    // Save the processed image
-    const processedImageBuffer = await response.arrayBuffer();
-    fs.writeFileSync(outputPath, Buffer.from(processedImageBuffer));
 
     // Clean up temp files
     fs.unlinkSync(tempFilePath);
