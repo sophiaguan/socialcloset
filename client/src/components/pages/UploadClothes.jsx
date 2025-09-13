@@ -3,6 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 
 import "../../utilities.css";
 
+
+
 const ImageEdit = () => {
     const location = useLocation();
     const [imageData, setImageData] = useState(null);
@@ -47,6 +49,17 @@ const ImageEdit = () => {
             if (response.ok) {
                 alert(`✅ Success! Image processed and saved as: ${result.processedImage}`);
                 console.log("Upload successful:", result);
+                // Now call the S3 upload API
+                const uploadResponse = await fetch("/api/upload-to-s3", { method: "POST" });
+                const uploadResult = await uploadResponse.json();
+
+                if (uploadResponse.ok) {
+                alert("🎉 Uploaded to S3 successfully!");
+                console.log("S3 Upload result:", uploadResult);
+                } else {
+                alert(`❌ S3 Upload error: ${uploadResult.error}`);
+                }
+
             } else {
                 alert(`❌ Error: ${result.error}`);
                 console.error("Upload failed:", result);

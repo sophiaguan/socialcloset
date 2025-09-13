@@ -1,8 +1,32 @@
+import dotenv from "dotenv";
+dotenv.config();
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import fs from "fs";
 import path from "path";
+console.log("AWS_ACCESS_KEY_ID:", process.env.AWS_ACCESS_KEY_ID);
+console.log("AWS_SECRET_ACCESS_KEY:", process.env.AWS_SECRET_ACCESS_KEY);
 
-const s3 = new S3Client({ region: "us-east-1" });
+
+require("dotenv").config();
+
+// dotenv.config();
+
+import { fromIni } from "@aws-sdk/credential-providers";
+
+const s3 = new S3Client({
+  region: process.env.AWS_REGION || "us-east-1",
+  credentials: fromIni({ profile: "default" }) // matches your ~/.aws/credentials
+});
+
+
+
+const s3 = new S3Client({
+    region: "us-east-2",
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    },
+  });
 
 async function uploadImage(filePath, clothingType, fileName) {
   // filePath: local path from AI pipeline output
@@ -15,7 +39,8 @@ async function uploadImage(filePath, clothingType, fileName) {
     Bucket: "socialcloset",
     Key: `${clothingType}/${fileName}`, // subfolder based on type
     Body: fileStream,
-    ContentType: "image/png",
+    ContentType: "image/jpeg",
+    ACL: "public-read",
   };
 
   try {

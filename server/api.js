@@ -12,6 +12,7 @@ const multer = require("multer");
 const FormData = require("form-data");
 const fs = require("fs");
 const path = require("path");
+const removeBg = require("remove.bg");
 
 // import models so we can interact with the database
 const User = require("./models/user");
@@ -93,6 +94,8 @@ router.post("/upload-to-s3", async (req, res) => {
   }
 });
 
+
+
 // Upload clothing image and process it
 router.post("/upload-clothing", upload.single('image'), async (req, res) => {
   try {
@@ -109,54 +112,19 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
     const nextNumber = existingFiles.length + 1;
     const outputPath = `${tempDir}image${nextNumber}.png`;
 
-    console.log("Processing image:", tempFilePath);
-    console.log("Clothing details:", { imageName, clothingType });
-
-    // Call Python script directly (more reliable than replicating API call)
-    const { spawn } = require('child_process');
-
-    console.log("Calling Python script to process image...");
-    console.log("Input file:", tempFilePath);
-    console.log("Output file:", outputPath);
-
-    // Call the Python script with the temp file (using conda Python)
-    const pythonProcess = spawn('python', [
-      path.join(__dirname, '..', 'pixian.py'),
-      tempFilePath,
-      outputPath
-    ]);
-
-    // Wait for Python script to complete
-    await new Promise((resolve, reject) => {
-      pythonProcess.on('close', (code) => {
-        if (code === 0) {
-          console.log("✅ Python script completed successfully");
-          resolve();
-        } else {
-          console.error(`❌ Python script failed with code ${code}`);
-          reject(new Error(`Python script failed with exit code ${code}`));
-        }
-      });
-
-      pythonProcess.on('error', (error) => {
-        console.error("❌ Error running Python script:", error);
-        reject(error);
-      });
-
-      // Log Python output
-      pythonProcess.stdout.on('data', (data) => {
-        console.log("Python output:", data.toString());
-      });
-
-      pythonProcess.stderr.on('data', (data) => {
-        console.error("Python error:", data.toString());
-      });
+    console.log("Processing image with remove.bg:", tempFilePath);
+    // Call remove.bg API
+    const result = await removeBg.removeBackgroundFromImageFile({
+      path: tempFilePath,
+      apiKey: "QcUoJnhvRRgfjBCzhpQnnJjA".trim(),
+      size: 'auto',
+      type: 'auto',
+      outputFile: outputPath
     });
+    
 
-    // Check if the output file was created
-    if (!fs.existsSync(outputPath)) {
-      throw new Error("Python script did not create output file");
-    }
+    // Save processed image
+    // fs.writeFileSync(outputPath, result.base64img, "base64");
 
     // Save clothing metadata to JSON file
     const metadataPath = outputPath.replace('.png', '_metadata.json');
