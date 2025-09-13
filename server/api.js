@@ -73,7 +73,12 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
 
     const { imageName, clothingType } = req.body;
     const tempFilePath = req.file.path;
-    const outputPath = `temp/processed_${Date.now()}.png`;
+    
+    // Generate sequential filename (image1, image2, etc.)
+    const tempDir = 'temp/';
+    const existingFiles = fs.readdirSync(tempDir).filter(file => file.startsWith('image') && file.endsWith('.png'));
+    const nextNumber = existingFiles.length + 1;
+    const outputPath = `${tempDir}image${nextNumber}.png`;
 
     console.log("Processing image:", tempFilePath);
     console.log("Clothing details:", { imageName, clothingType });
@@ -124,6 +129,21 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
       throw new Error("Python script did not create output file");
     }
 
+    // Save clothing metadata to JSON file
+    const metadataPath = outputPath.replace('.png', '_metadata.json');
+    const clothingData = {
+      id: Date.now(),
+      name: imageName,
+      type: clothingType,
+      originalImage: req.file.originalname,
+      processedImage: path.basename(outputPath),
+      createdAt: new Date().toISOString(),
+      fileSize: fs.statSync(outputPath).size
+    };
+    
+    fs.writeFileSync(metadataPath, JSON.stringify(clothingData, null, 2));
+    console.log("✅ Clothing metadata saved:", metadataPath);
+
     // Clean up temp files
     fs.unlinkSync(tempFilePath);
 
@@ -134,6 +154,7 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
       message: "Image processed successfully",
       originalImage: req.file.originalname,
       processedImage: path.basename(outputPath),
+      metadataFile: path.basename(metadataPath),
       clothingDetails: {
         name: imageName,
         type: clothingType
