@@ -18,14 +18,43 @@ const ImageEdit = () => {
         }
     }, [location.state]);
 
-    const handleSubmit = () => {
-        // TODO: Implement submit functionality
-        console.log("Submitting:", {
-            imageData,
-            imageName,
-            clothingType
-        });
-        alert("Submit functionality coming soon!");
+    const handleSubmit = async () => {
+        if (!imageData || !imageName.trim()) {
+            alert("Please provide both an image and a name for the clothing item.");
+            return;
+        }
+
+        try {
+            // Create FormData to send file and metadata
+            const formData = new FormData();
+            formData.append('image', imageData.file);
+            formData.append('imageName', imageName);
+            formData.append('clothingType', clothingType);
+
+            console.log("Submitting:", {
+                imageName,
+                clothingType,
+                fileName: imageData.file.name
+            });
+
+            const response = await fetch('/api/upload-clothing', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert(`✅ Success! Image processed and saved as: ${result.processedImage}`);
+                console.log("Upload successful:", result);
+            } else {
+                alert(`❌ Error: ${result.error}`);
+                console.error("Upload failed:", result);
+            }
+        } catch (error) {
+            console.error("Error submitting:", error);
+            alert("❌ Failed to submit. Please try again.");
+        }
     };
 
     if (!imageData) {
