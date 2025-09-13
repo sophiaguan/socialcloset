@@ -1,12 +1,20 @@
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// allow __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// point dotenv to project root
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
+
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import fs from "fs";
-import path from "path";
 
-dotenv.config();
 
 const s3 = new S3Client({
-    region: "us-east-1",
+    region: "us-east-2",
     credentials: {
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
