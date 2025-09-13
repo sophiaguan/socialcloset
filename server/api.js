@@ -16,6 +16,8 @@ const path = require("path");
 // import models so we can interact with the database
 const User = require("./models/user");
 
+const { uploadAllFromTemp } = require("./upload"); 
+
 // import authentication library
 const auth = require("./auth");
 
@@ -35,7 +37,7 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ 
+const upload = multer({
   storage: storage,
   limits: {
     fileSize: 10 * 1024 * 1024 // 10MB limit
@@ -64,6 +66,33 @@ router.post("/initsocket", (req, res) => {
 // | write your API methods below!|
 // |------------------------------|
 
+const generateCode = () => {
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let code = '';
+  for (let i = 0; i < 4; i++) {
+    code += letters.charAt(Math.floor(Math.random() * letters.length));
+  }
+  return code;
+};
+
+router.post('/creategroup', async (req, res) => {
+  const groupId = generateCode();
+  const group = new Group({ name: req.body.name, code: groupId, users: [req.user.googleid]});
+  await group.save();
+  res.json({ groupId });
+});
+
+// Upload all processed images in /temp to S3
+router.post("/upload-to-s3", async (req, res) => {
+  try {
+    await uploadAllFromTemp();
+    res.json({ success: true, message: "All images uploaded to S3" });
+  } catch (err) {
+    console.error("❌ Error uploading to S3:", err);
+    res.status(500).json({ success: false, error: "S3 upload failed" });
+  }
+});
+
 // Upload clothing image and process it
 router.post("/upload-clothing", upload.single('image'), async (req, res) => {
   try {
@@ -73,44 +102,76 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
 
     const { imageName, clothingType } = req.body;
     const tempFilePath = req.file.path;
-    const outputPath = `temp/processed_${Date.now()}.png`;
+    
+    // Generate sequential filename (image1, image2, etc.)
+    const tempDir = 'temp/';
+    const existingFiles = fs.readdirSync(tempDir).filter(file => file.startsWith('image') && file.endsWith('.png'));
+    const nextNumber = existingFiles.length + 1;
+    const outputPath = `${tempDir}image${nextNumber}.png`;
 
     console.log("Processing image:", tempFilePath);
     console.log("Clothing details:", { imageName, clothingType });
 
-    // Call Pixian.ai API directly
-    const form = new FormData();
-    form.append('image', fs.createReadStream(tempFilePath));
-    form.append('format', 'PNG');
-    form.append('quality', 'high');
-    form.append('test', 'true');
+    // Call Python script directly (more reliable than replicating API call)
+    const { spawn } = require('child_process');
 
-    console.log("Calling Pixian.ai API with test mode enabled...");
-    console.log("Form data fields:", {
-      format: 'PNG',
-      quality: 'high', 
-      test: 'true'
-    });
-    
-    const response = await fetch('https://api.pixian.ai/api/v2/remove-background', {
-      method: 'POST',
-      body: form,
-      headers: {
-        'Authorization': 'Basic ' + Buffer.from('pxhkyis8zj8cysa:qnuag772k0brml0dj8lfv469a38sthmtq7e4vses7v035kccpc54').toString('base64')
-      }
+    console.log("Calling Python script to process image...");
+    console.log("Input file:", tempFilePath);
+    console.log("Output file:", outputPath);
+
+    // Call the Python script with the temp file (using conda Python)
+    const pythonProcess = spawn('python', [
+      path.join(__dirname, '..', 'pixian.py'),
+      tempFilePath,
+      outputPath
+    ]);
+
+    // Wait for Python script to complete
+    await new Promise((resolve, reject) => {
+      pythonProcess.on('close', (code) => {
+        if (code === 0) {
+          console.log("✅ Python script completed successfully");
+          resolve();
+        } else {
+          console.error(`❌ Python script failed with code ${code}`);
+          reject(new Error(`Python script failed with exit code ${code}`));
+        }
+      });
+
+      pythonProcess.on('error', (error) => {
+        console.error("❌ Error running Python script:", error);
+        reject(error);
+      });
+
+      // Log Python output
+      pythonProcess.stdout.on('data', (data) => {
+        console.log("Python output:", data.toString());
+      });
+
+      pythonProcess.stderr.on('data', (data) => {
+        console.error("Python error:", data.toString());
+      });
     });
 
-    console.log("Pixian API response status:", response.status);
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Pixian API error response:", errorText);
-      throw new Error(`Pixian API error: ${response.status} ${response.statusText} - ${errorText}`);
+    // Check if the output file was created
+    if (!fs.existsSync(outputPath)) {
+      throw new Error("Python script did not create output file");
     }
 
-    // Save the processed image
-    const processedImageBuffer = await response.arrayBuffer();
-    fs.writeFileSync(outputPath, Buffer.from(processedImageBuffer));
+    // Save clothing metadata to JSON file
+    const metadataPath = outputPath.replace('.png', '_metadata.json');
+    const clothingData = {
+      id: Date.now(),
+      name: imageName,
+      type: clothingType,
+      originalImage: req.file.originalname,
+      processedImage: path.basename(outputPath),
+      createdAt: new Date().toISOString(),
+      fileSize: fs.statSync(outputPath).size
+    };
+    
+    fs.writeFileSync(metadataPath, JSON.stringify(clothingData, null, 2));
+    console.log("✅ Clothing metadata saved:", metadataPath);
 
     // Clean up temp files
     fs.unlinkSync(tempFilePath);
@@ -122,6 +183,7 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
       message: "Image processed successfully",
       originalImage: req.file.originalname,
       processedImage: path.basename(outputPath),
+      metadataFile: path.basename(metadataPath),
       clothingDetails: {
         name: imageName,
         type: clothingType
@@ -131,15 +193,15 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
   } catch (error) {
     console.error("Error processing image:", error);
     console.error("Error stack:", error.stack);
-    
+
     // Clean up temp file if it exists
     if (req.file && fs.existsSync(req.file.path)) {
       console.log("Cleaning up temp file:", req.file.path);
       fs.unlinkSync(req.file.path);
     }
-    
-    res.status(500).json({ 
-      error: "Failed to process image", 
+
+    res.status(500).json({
+      error: "Failed to process image",
       details: error.message,
       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });

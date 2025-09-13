@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import fs from "fs"; // For Node.js, local file
+import fs from "fs";
+import path from "path";
 
 dotenv.config();
 
@@ -36,5 +37,59 @@ async function uploadImage(filePath, clothingType, fileName) {
   }
 }
 
-// Example usage
-uploadImage("./output_ai_image.jpg", "tops", "shirt1.jpg");
+async function uploadAllFromTemp() {
+  const tempDir = "./temp/";
+  
+  try {
+    // Read all files in temp directory
+    const files = fs.readdirSync(tempDir);
+    
+    // Filter for image files (image1.png, image2.png, etc.)
+    const imageFiles = files.filter(file => file.startsWith('image') && file.endsWith('.png'));
+    
+    console.log(`Found ${imageFiles.length} images to upload:`, imageFiles);
+    
+    for (const imageFile of imageFiles) {
+      const imagePath = path.join(tempDir, imageFile);
+      const metadataFile = imageFile.replace('.png', '_metadata.json');
+      const metadataPath = path.join(tempDir, metadataFile);
+      
+      // Read metadata to get clothing type and name
+      let clothingType = "unknown";
+      let clothingName = "unknown";
+      
+      if (fs.existsSync(metadataPath)) {
+        const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
+        clothingType = metadata.type || "unknown";
+        clothingName = metadata.name || "unknown";
+        console.log(`Processing ${imageFile}: ${clothingName} (${clothingType})`);
+      } else {
+        console.log(`No metadata found for ${imageFile}, using defaults`);
+      }
+      
+      // Upload to S3
+      const s3Url = await uploadImage(imagePath, clothingType, imageFile);
+      
+      if (s3Url) {
+        console.log(`✅ Uploaded ${imageFile} to: ${s3Url}`);
+        
+        // Update metadata with S3 URL
+        if (fs.existsSync(metadataPath)) {
+          const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
+          metadata.s3Url = s3Url;
+          metadata.uploadedAt = new Date().toISOString();
+          fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
+          console.log(`📝 Updated metadata for ${imageFile}`);
+        }
+      }
+    }
+    
+    console.log("🎉 All images uploaded successfully!");
+    
+  } catch (error) {
+    console.error("Error uploading images:", error);
+  }
+}
+
+// Upload all images from temp folder
+uploadAllFromTemp();

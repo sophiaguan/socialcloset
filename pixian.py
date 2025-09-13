@@ -39,16 +39,32 @@ def remove_background_pixian(image_path, output_path='pixian_result.png'):
         return False
 
 if __name__ == "__main__":
-    # Test with a sample image
-    test_image = "sample_image.jpg"  # Change this to your image file
+    import sys
     
-    if not os.path.exists(test_image):
-        print(f"❌ Please create a test image named '{test_image}' or change the filename in the code")
-        print("You can create one with: python -c \"from PIL import Image, ImageDraw; img = Image.new('RGB', (300, 400), 'lightblue'); draw = ImageDraw.Draw(img); draw.rectangle([100, 150, 200, 350], fill='red'); img.save('sample_image.jpg')\"")
-    else:
-        print(f"🔄 Processing image: {test_image}")
-        success = remove_background_pixian(test_image)
+    # Check if command line arguments are provided
+    if len(sys.argv) >= 2:
+        input_path = sys.argv[1]
+        output_path = sys.argv[2] if len(sys.argv) > 2 else 'pixian_result.png'
+        
+        print(f"🔄 Processing image: {input_path}")
+        success = remove_background_pixian(input_path, output_path)
         if success:
             print("🎉 Done!")
+            sys.exit(0)
         else:
             print("💥 Failed to remove background")
+            sys.exit(1)
+    else:
+        # Test with a sample image
+        test_image = "sample_image.jpg"  # Change this to your image file
+        
+        if not os.path.exists(test_image):
+            print(f"❌ Please create a test image named '{test_image}' or change the filename in the code")
+            print("You can create one with: python -c \"from PIL import Image, ImageDraw; img = Image.new('RGB', (300, 400), 'lightblue'); draw = ImageDraw.Draw(img); draw.rectangle([100, 150, 200, 350], fill='red'); img.save('sample_image.jpg')\"")
+        else:
+            print(f"🔄 Processing image: {test_image}")
+            success = remove_background_pixian(test_image)
+            if success:
+                print("🎉 Done!")
+            else:
+                print("💥 Failed to remove background")
