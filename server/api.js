@@ -43,6 +43,22 @@ router.post("/initsocket", (req, res) => {
 // | write your API methods below!|
 // |------------------------------|
 
+const generateCode = () => {
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let code = '';
+  for (let i = 0; i < 4; i++) {
+    code += letters.charAt(Math.floor(Math.random() * letters.length));
+  }
+  return code;
+};
+
+router.post('/creategroup', async (req, res) => {
+  const groupId = generateCode();
+  const group = new Group({ name: req.body.name, code: groupId, users: [req.user.googleid]});
+  await group.save();
+  res.json({ groupId });
+});
+
 // anything else falls to this "not found" case
 router.all("*", (req, res) => {
   console.log(`API route not found: ${req.method} ${req.url}`);
