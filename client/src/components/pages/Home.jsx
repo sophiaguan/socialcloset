@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { GoogleLogin, googleLogout } from "@react-oauth/google";
-import { Link } from "react-router-dom";
 
 import "../../utilities.css";
 import "./Home.css";
@@ -22,24 +21,8 @@ const Home = () => {
       ) : (
         <GoogleLogin onSuccess={handleLogin} onError={(err) => console.log(err)} />
       )}
-      <h1>SocialCloset</h1>
-
-      <div style={{ marginBottom: "30px" }}>
-        <Link
-          to="/my-closet"
-          style={{
-            backgroundColor: "#007bff",
-            color: "white",
-            textDecoration: "none",
-            padding: "12px 24px",
-            borderRadius: "6px",
-            fontSize: "16px",
-            display: "inline-block"
-          }}
-        >
-          My Closet
-        </Link>
-      </div>
+      <h1>Welcome to SocialCloset</h1>
+      <p>Your personal fashion companion for organizing and sharing your style.</p>
     </>
   );
 };

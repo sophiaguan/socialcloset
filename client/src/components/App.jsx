@@ -8,6 +8,7 @@ import "../utilities.css";
 import { socket } from "../client-socket";
 
 import { get, post } from "../utilities";
+import Navigation from "./Navigation";
 
 export const UserContext = createContext(null);
 
@@ -49,7 +50,10 @@ const App = () => {
 
   return (
     <UserContext.Provider value={authContextValue}>
-      <Outlet />
+      <Navigation />
+      <div style={{ marginTop: "60px" }}>
+        <Outlet />
+      </div>
     </UserContext.Provider>
   );
 };
