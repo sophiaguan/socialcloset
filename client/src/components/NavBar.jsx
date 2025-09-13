@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { GoogleLogin } from "@react-oauth/google";
 
 import "../utilities.css";
 import { UserContext } from "./App";
@@ -8,7 +7,7 @@ import UserProfile from "./UserProfile";
 
 const NavBar = () => {
     const location = useLocation();
-    const { userId, handleLogin } = useContext(UserContext);
+    const { userId } = useContext(UserContext);
 
     const navItems = [
         { path: "/my-closet", label: "My Closet" },
@@ -21,7 +20,7 @@ const NavBar = () => {
             position: "fixed",
             top: 0,
             left: 0,
-            
+
             right: 0,
             backgroundColor: "#fff",
             borderBottom: "1px solid #e0e0e0",
@@ -74,24 +73,12 @@ const NavBar = () => {
                     )}
                 </div>
 
-                {/* Right side - Login/Profile */}
-                <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-                    {userId ? (
-                        // Logged in user - show profile dropdown
+                {/* Right side - Profile (only show when logged in) */}
+                {userId && (
+                    <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
                         <UserProfile />
-                    ) : (
-                        // Not logged in - show login button
-                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                            <GoogleLogin
-                                onSuccess={handleLogin}
-                                onError={(err) => console.log(err)}
-                                text="signin_with"
-                                shape="rectangular"
-                                size="medium"
-                            />
-                        </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
         </nav>
     );
