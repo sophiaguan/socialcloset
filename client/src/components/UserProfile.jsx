@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { googleLogout } from "@react-oauth/google";
 
 import { UserContext } from "./App";
@@ -6,6 +7,7 @@ import { UserContext } from "./App";
 const UserProfile = () => {
     const { userId, userInfo, handleLogout } = useContext(UserContext);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const navigate = useNavigate();
 
     if (!userId || !userInfo) {
         return null;
@@ -18,6 +20,7 @@ const UserProfile = () => {
         googleLogout();
         handleLogout();
         setIsDropdownOpen(false);
+        navigate("/"); // Redirect to home page
     };
 
     const handleSettingsClick = () => {
