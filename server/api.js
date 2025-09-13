@@ -64,6 +64,22 @@ router.post("/initsocket", (req, res) => {
 // | write your API methods below!|
 // |------------------------------|
 
+const generateCode = () => {
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let code = '';
+  for (let i = 0; i < 4; i++) {
+    code += letters.charAt(Math.floor(Math.random() * letters.length));
+  }
+  return code;
+};
+
+router.post('/creategroup', async (req, res) => {
+  const groupId = generateCode();
+  const group = new Group({ name: req.body.name, code: groupId, users: [req.user.googleid]});
+  await group.save();
+  res.json({ groupId });
+});
+
 // Upload clothing image and process it
 router.post("/upload-clothing", upload.single('image'), async (req, res) => {
   try {
