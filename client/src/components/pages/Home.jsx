@@ -1,28 +1,26 @@
 import React, { useContext } from "react";
-import { GoogleLogin, googleLogout } from "@react-oauth/google";
 
 import "../../utilities.css";
 import "./Home.css";
 import { UserContext } from "../App";
 
 const Home = () => {
-  const { userId, handleLogin, handleLogout } = useContext(UserContext);
+  const { userId } = useContext(UserContext);
   return (
     <>
       {userId ? (
-        <button
-          onClick={() => {
-            googleLogout();
-            handleLogout();
-          }}
-        >
-          Logout
-        </button>
+        <div style={{ marginTop: "40px" }}>
+          <h1>Welcome back!</h1>
+          <p>Manage your wardrobe.</p>
+        </div>
       ) : (
-        <GoogleLogin onSuccess={handleLogin} onError={(err) => console.log(err)} />
+        <div style={{ marginTop: "40px" }}>
+          <h1>Welcome to SocialCloset</h1>
+          <p>Your personal fashion companion for organizing and sharing your style.</p>
+          <h2>Get Started</h2>
+          <p>Sign in with Google to start organizing your closet and sharing your style with friends.</p>
+        </div>
       )}
-      <h1>Welcome to SocialCloset</h1>
-      <p>Your personal fashion companion for organizing and sharing your style.</p>
     </>
   );
 };
