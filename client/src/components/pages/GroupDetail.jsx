@@ -73,10 +73,7 @@ const GroupDetail = () => {
 
                 <button
                     className="group-action-btn make-outfits-btn"
-                    onClick={() => {
-                        // TODO: Implement Make Outfits functionality
-                        alert("Make Outfits functionality coming soon!");
-                    }}
+                    onClick={() => navigate("/my-outfits")}
                 >
                     <div className="action-icon">👗</div>
                     <div className="action-content">
