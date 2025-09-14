@@ -21,14 +21,13 @@ const ImageEdit = () => {
 
     const handleSubmit = async () => {
         if (!imageData || !imageName.trim()) {
-            alert("Please provide both an image and a name for the clothing item.");
+            alert("Please provide both an image.");
             return;
         }
 
         try {
             const formData = new FormData();
             formData.append('image', imageData.file);
-            formData.append('imageName', imageName);
             formData.append('clothingType', clothingType);
 
             console.log("Submitting:", {
@@ -102,7 +101,7 @@ const ImageEdit = () => {
                 <div style={{ flex: '1', minWidth: '300px' }}>
                     <h3>Clothing Details</h3>
 
-                    <div style={{ marginBottom: '20px' }}>
+                    {/* <div style={{ marginBottom: '20px' }}>
                         <label htmlFor="imageName" style={{
                             display: 'block',
                             marginBottom: '8px',
@@ -125,7 +124,7 @@ const ImageEdit = () => {
                                 boxSizing: 'border-box'
                             }}
                         />
-                    </div>
+                    </div> */}
 
                     <div style={{ marginBottom: '30px' }}>
                         <label htmlFor="clothingType" style={{
@@ -151,6 +150,7 @@ const ImageEdit = () => {
                         >
                             <option value="top">Top</option>
                             <option value="bottom">Bottom</option>
+                            <option value="head">Head</option>
                         </select>
                     </div>
 
