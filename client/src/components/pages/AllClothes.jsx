@@ -11,6 +11,7 @@ const AllClothes = () => {
     tops: [],
     bottoms: [],
     heads: [],
+    shoes: []
   });
 
   // Scroll to top on mount
@@ -52,6 +53,11 @@ const AllClothes = () => {
       type: "head",
       id: `head-${index}`,
     })),
+    ...clothingData.shoes.map((url, index) => ({
+        url,
+        type: "shoe",
+        id: `shoe-${index}`,
+      })),
   ];
 
   return (
