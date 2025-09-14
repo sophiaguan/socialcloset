@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import "../../utilities.css";
 
@@ -8,6 +8,31 @@ const Friends = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isCreatingGroup, setIsCreatingGroup] = useState(false);
     const [createdGroupCode, setCreatedGroupCode] = useState("");
+    const [userGroups, setUserGroups] = useState([]);
+    const [isLoadingGroups, setIsLoadingGroups] = useState(false);
+
+    // Fetch user's groups on component mount and after group operations
+    const fetchUserGroups = async () => {
+        setIsLoadingGroups(true);
+        try {
+            const response = await fetch("/api/usergroups");
+            const data = await response.json();
+            
+            if (response.ok) {
+                setUserGroups(data.groups);
+            } else {
+                console.error("Failed to fetch groups:", data.error);
+            }
+        } catch (error) {
+            console.error("Error fetching groups:", error);
+        } finally {
+            setIsLoadingGroups(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchUserGroups();
+    }, []);
 
     const handleJoinGroup = async () => {
         if (!groupCode || groupCode.length !== 4) {
@@ -32,6 +57,8 @@ const Friends = () => {
             if (response.ok) {
                 setMessage(`Successfully joined group "${data.groupName}"!`);
                 setGroupCode("");
+                // Refresh the groups list
+                fetchUserGroups();
             } else {
                 setMessage(data.error || "Failed to join group.");
             }
@@ -61,6 +88,8 @@ const Friends = () => {
             if (response.ok) {
                 setCreatedGroupCode(data.groupId);
                 setMessage(`Group created successfully! Share this code with your friends: ${data.groupId}`);
+                // Refresh the groups list
+                fetchUserGroups();
             } else {
                 setMessage(data.error || "Failed to create group.");
             }
@@ -173,8 +202,77 @@ const Friends = () => {
                 )}
             </div>
 
-            <div style={{ marginTop: "20px" }}>
-                <p>No friends added yet. Start building your fashion community!</p>
+            {/* User's Groups Section */}
+            <div style={{ marginTop: "40px" }}>
+                <h2 style={{ marginBottom: "15px" }}>Your Groups</h2>
+                
+                {isLoadingGroups ? (
+                    <p>Loading your groups...</p>
+                ) : userGroups.length > 0 ? (
+                    <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+                        {userGroups.map((group) => (
+                            <div 
+                                key={group.id}
+                                style={{
+                                    border: "1px solid #ddd",
+                                    borderRadius: "8px",
+                                    padding: "20px",
+                                    backgroundColor: "#f9f9f9"
+                                }}
+                            >
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px" }}>
+                                    <h3 style={{ margin: "0", color: "#333" }}>{group.name}</h3>
+                                    <div style={{
+                                        backgroundColor: "#007bff",
+                                        color: "white",
+                                        padding: "4px 12px",
+                                        borderRadius: "4px",
+                                        fontSize: "14px",
+                                        fontWeight: "bold",
+                                        letterSpacing: "1px"
+                                    }}>
+                                        {group.code}
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h4 style={{ margin: "0 0 10px 0", color: "#666", fontSize: "14px" }}>
+                                        Members ({group.members.length})
+                                    </h4>
+                                    <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                                        {group.members.map((member, index) => (
+                                            <div 
+                                                key={index}
+                                                style={{
+                                                    backgroundColor: "#e9ecef",
+                                                    padding: "6px 12px",
+                                                    borderRadius: "16px",
+                                                    fontSize: "14px",
+                                                    color: "#495057",
+                                                    border: "1px solid #dee2e6"
+                                                }}
+                                            >
+                                                {member.name}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div style={{ 
+                        textAlign: "center", 
+                        padding: "40px 20px",
+                        backgroundColor: "#f8f9fa",
+                        border: "1px solid #dee2e6",
+                        borderRadius: "8px"
+                    }}>
+                        <p style={{ margin: "0", color: "#666" }}>
+                            You're not part of any groups yet. Create a group or join one using a code above!
+                        </p>
+                    </div>
+                )}
             </div>
         </div>
     );
