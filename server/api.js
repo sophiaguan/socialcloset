@@ -139,6 +139,35 @@ router.post('/joingroup', auth.ensureLoggedIn, async (req, res) => {
   }
 });
 
+// Get all groups that the user is part of
+router.get('/usergroups', auth.ensureLoggedIn, async (req, res) => {
+  try {
+    // Find all groups where the user is a member
+    const groups = await Group.find({ users: req.user.googleid });
+    
+    // For each group, get user details for all members
+    const groupsWithMembers = await Promise.all(
+      groups.map(async (group) => {
+        const memberUsers = await User.find({ googleid: { $in: group.users } });
+        return {
+          id: group._id,
+          name: group.name,
+          code: group.code,
+          members: memberUsers.map(user => ({
+            name: user.name,
+            googleid: user.googleid
+          }))
+        };
+      })
+    );
+
+    res.json({ groups: groupsWithMembers });
+  } catch (error) {
+    console.error("Error fetching user groups:", error);
+    res.status(500).json({ error: "Failed to fetch groups" });
+  }
+});
+
 // Upload all processed images in /temp to S3
 router.post("/upload-to-s3", async (req, res) => {
   try {
