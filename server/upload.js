@@ -1,11 +1,15 @@
 import dotenv from "dotenv";
+<<<<<<< HEAD
 dotenv.config();
+=======
+>>>>>>> main
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import fs from "fs";
 import path from "path";
 console.log("AWS_ACCESS_KEY_ID:", process.env.AWS_ACCESS_KEY_ID);
 console.log("AWS_SECRET_ACCESS_KEY:", process.env.AWS_SECRET_ACCESS_KEY);
 
+<<<<<<< HEAD
 // dotenv.config();
 
 import { fromIni } from "@aws-sdk/credential-providers";
@@ -19,6 +23,12 @@ import { fromIni } from "@aws-sdk/credential-providers";
 
 const s3 = new S3Client({
     region: "us-east-2",
+=======
+dotenv.config();
+
+const s3 = new S3Client({
+    region: "us-east-1",
+>>>>>>> main
     credentials: {
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
