@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import "../../utilities.css";
+import "./UploadClothes.css";
 import BackButton from "../BackButton";
 
 const ImageEdit = () => {
@@ -83,96 +84,52 @@ const ImageEdit = () => {
 
     if (!imageData) {
         return (
-            <div style={{ padding: "40px 60px" }}>
+            <div className="upload-clothes-container">
                 <BackButton destination="/my-closet" label="Back to My Closet" />
-                <h1 style={{ marginTop: "20px", marginBottom: "10px" }}>No Image Selected</h1>
-                <p>Please go back to My Closet and upload an image first.</p>
+                <div className="no-image-container">
+                    <h1 className="no-image-title">No Image Selected</h1>
+                    <p className="no-image-message">Please go back to My Closet and upload an image first.</p>
+                </div>
             </div>
         );
     }
 
     return (
-        <div style={{ padding: "40px 60px" }}>
+        <div className="upload-clothes-container">
             <BackButton destination="/my-closet" label="Back to My Closet" />
 
-            <h1 style={{ marginTop: "20px", marginBottom: "10px" }}>Upload Your Clothes</h1>
-            <p style={{ marginBottom: "20px" }}>Add details about your clothing item.</p>
+            <div className="upload-clothes-header">
+                <h1 className="upload-clothes-title">Upload Your Clothes</h1>
+                <p className="upload-clothes-subtitle">Add details about your clothing item.</p>
+            </div>
 
-            <div style={{
-                display: 'flex',
-                gap: '40px',
-                marginTop: '20px',
-                flexWrap: 'wrap'
-            }}>
+            <div className="upload-clothes-content">
                 {/* Image Preview */}
-                <div style={{ flex: '0 0 300px' }}>
-                    <h3>Image Preview</h3>
-                    <img
-                        src={imageData.url}
-                        alt={imageData.name}
-                        style={{
-                            width: '100%',
-                            maxWidth: '300px',
-                            height: '300px',
-                            objectFit: 'cover',
-                            borderRadius: '8px',
-                            border: '1px solid #ddd'
-                        }}
-                    />
+                <div className="image-preview-section">
+                    <h3 className="image-preview-title">Image Preview</h3>
+                    <div className="image-preview-container">
+                        <img
+                            src={imageData.url}
+                            alt={imageData.name}
+                            className="image-preview"
+                        />
+                    </div>
                 </div>
 
                 {/* Form */}
-                <div style={{ flex: '1', minWidth: '300px' }}>
-                    <h3>Clothing Details</h3>
+                <div className="form-section">
+                    <h3 className="form-title">Clothing Details</h3>
 
-                    {/* <div style={{ marginBottom: '20px' }}>
-                        <label htmlFor="imageName" style={{
-                            display: 'block',
-                            marginBottom: '8px',
-                            fontWeight: 'bold'
-                        }}>
-                            Name:
-                        </label>
-                        <input
-                            id="imageName"
-                            type="text"
-                            value={imageName}
-                            onChange={(e) => setImageName(e.target.value)}
-                            placeholder="Enter a name for this clothing item"
-                            style={{
-                                width: '100%',
-                                padding: '12px',
-                                border: '1px solid #ddd',
-                                borderRadius: '6px',
-                                fontSize: '16px',
-                                boxSizing: 'border-box'
-                            }}
-                        />
-                    </div> */}
-
-                    <div style={{ marginBottom: '30px' }}>
-                        <label htmlFor="clothingType" style={{
-                            display: 'block',
-                            marginBottom: '8px',
-                            fontWeight: 'bold'
-                        }}>
+                    <div className="form-group">
+                        <label htmlFor="clothingType" className="form-label">
                             Type:
                         </label>
                         <select
                             id="clothingType"
                             value={clothingType}
                             onChange={(e) => setClothingType(e.target.value)}
-                            style={{
-                                width: '100%',
-                                padding: '12px',
-                                border: '1px solid #ddd',
-                                borderRadius: '6px',
-                                fontSize: '16px',
-                                backgroundColor: 'white',
-                                boxSizing: 'border-box'
-                            }}
+                            className="form-select"
                         >
-
                             <option value="tops">Top</option>
                             <option value="bottoms">Bottom</option>
                             <option value="heads">Headwear</option>
@@ -182,16 +139,7 @@ const ImageEdit = () => {
 
                     <button
                         onClick={handleSubmit}
-                        style={{
-                            backgroundColor: "#28a745",
-                            color: "white",
-                            border: "none",
-                            padding: "12px 24px",
-                            borderRadius: "6px",
-                            fontSize: "16px",
-                            cursor: "pointer",
-                            width: "100%"
-                        }}
+                        className="submit-button"
                     >
                         Submit
                     </button>
