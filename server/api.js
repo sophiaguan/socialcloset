@@ -17,7 +17,7 @@ const path = require("path");
 const User = require("./models/user");
 const Group = require("./models/group");
 
-const { uploadAllFromTemp } = require("./upload");
+const { uploadItem } = require("./upload");
 
 // import authentication library
 const auth = require("./auth");
@@ -169,15 +169,15 @@ router.get('/usergroups', auth.ensureLoggedIn, async (req, res) => {
 });
 
 // Upload all processed images in /temp to S3
-router.post("/upload-to-s3", async (req, res) => {
-  try {
-    await uploadAllFromTemp();
-    res.json({ success: true, message: "All images uploaded to S3" });
-  } catch (err) {
-    console.error("❌ Error uploading to S3:", err);
-    res.status(500).json({ success: false, error: "S3 upload failed" });
-  }
-});
+// router.post("/upload-to-s3", async (req, res) => {
+//   try {
+//     await uploadAllFromTemp();
+//     res.json({ success: true, message: "All images uploaded to S3" });
+//   } catch (err) {
+//     console.error("Error uploading to S3:", err);
+//     res.status(500).json({ success: false, error: "S3 upload failed" });
+//   }
+// });
 
 // Upload clothing image and process it
 router.post("/upload-clothing", upload.single('image'), async (req, res) => {
@@ -185,18 +185,23 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ error: "No image file provided" });
     }
+    if (!req.user) {
+      return res.status(401).send('You are not logged in!');
+    }
 
-    const { imageName, clothingType } = req.body;
+    const { clothingType } = req.body;
     const tempFilePath = req.file.path;
+    await User.updateOne({ googleid: req.user.googleid }, {
+      $set: {closetSize: req.user.closetSize + 1}
+    });
 
-    // Generate sequential filename (image1, image2, etc.)
+    // Generate filename
     const tempDir = 'temp/';
-    const existingFiles = fs.readdirSync(tempDir).filter(file => file.startsWith('image') && file.endsWith('.png'));
-    const nextNumber = existingFiles.length + 1;
-    const outputPath = `${tempDir}image${nextNumber}.png`;
+    const outputPath = `${tempDir}image_${req.user.googleid}_${req.user.closetSize}.png`;
+    // ^ will need to change if we implement delete clohtes function
 
     console.log("Processing image:", tempFilePath);
-    console.log("Clothing details:", { imageName, clothingType });
+    console.log("Clothing details:", { clothingType });
 
     // Call Python script directly (more reliable than replicating API call)
     const { spawn } = require('child_process');
@@ -207,7 +212,7 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
 
     // Call the Python script with the temp file (using conda Python)
     const pythonProcess = spawn('python', [
-      path.join(__dirname, '..', 'removebg.py'),
+      path.join(__dirname, '..', 'pixian.py'), // can change to removebg.py
       tempFilePath,
       outputPath
     ]);
@@ -216,16 +221,16 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
     await new Promise((resolve, reject) => {
       pythonProcess.on('close', (code) => {
         if (code === 0) {
-          console.log("✅ Python script completed successfully");
+          console.log("Python script completed successfully");
           resolve();
         } else {
-          console.error(`❌ Python script failed with code ${code}`);
+          console.error(`Python script failed with code ${code}`);
           reject(new Error(`Python script failed with exit code ${code}`));
         }
       });
 
       pythonProcess.on('error', (error) => {
-        console.error("❌ Error running Python script:", error);
+        console.error("Error running Python script:", error);
         reject(error);
       });
 
@@ -244,36 +249,24 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
       throw new Error("Python script did not create output file");
     }
 
-    // Save clothing metadata to JSON file
-    const metadataPath = outputPath.replace('.png', '_metadata.json');
-    const clothingData = {
-      id: Date.now(),
-      name: imageName,
-      type: clothingType,
-      originalImage: req.file.originalname,
-      processedImage: path.basename(outputPath),
-      createdAt: new Date().toISOString(),
-      fileSize: fs.statSync(outputPath).size
-    };
-
-    fs.writeFileSync(metadataPath, JSON.stringify(clothingData, null, 2));
-    console.log("✅ Clothing metadata saved:", metadataPath);
-
     // Clean up temp files
     fs.unlinkSync(tempFilePath);
 
-    console.log("✅ Image processed successfully:", outputPath);
+    console.log("Image processed successfully:", outputPath);
+
+    try {
+      const s3Url = await uploadItem(outputPath, clothingType, `image_${req.user.googleid}_${req.user.closetSize}.png`);
+      console.log("Image uploaded to S3:", s3Url);
+    } catch (err) {
+      console.error("Error uploading to S3:", err);
+      if (err.stack) console.error(err.stack);
+      res.status(500).json({ success: false, error: "S3 upload failed", details: err.message });
+      return;
+    }
+    fs.unlinkSync(outputPath);
 
     res.json({
-      success: true,
-      message: "Image processed successfully",
-      originalImage: req.file.originalname,
-      processedImage: path.basename(outputPath),
-      metadataFile: path.basename(metadataPath),
-      clothingDetails: {
-        name: imageName,
-        type: clothingType
-      }
+      success: true
     });
 
   } catch (error) {

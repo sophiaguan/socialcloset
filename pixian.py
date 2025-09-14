@@ -28,14 +28,14 @@ def remove_background_pixian(image_path, output_path='pixian_result.png'):
             # Save result
             with open(output_path, 'wb') as out:
                 out.write(response.content)
-            print(f"✅ Background removed successfully! Saved to: {output_path}")
+            print(f"Background removed successfully! Saved to: {output_path}")
             return True
         else:
-            print(f"❌ Error: {response.status_code} - {response.text}")
+            print(f"Error: {response.status_code} - {response.text}")
             return False
 
     except Exception as e:
-        print(f"❌ Error processing image: {str(e)}")
+        print(f"Error processing image: {str(e)}")
         return False
 
 if __name__ == "__main__":
@@ -49,7 +49,7 @@ if __name__ == "__main__":
         print(f"Processing image: {input_path}")
         success = remove_background_pixian(input_path, output_path)
         if success:
-            print("🎉 Done!")
+            print("Done!")
             sys.exit(0)
         else:
             print("Failed to remove background")
@@ -59,12 +59,12 @@ if __name__ == "__main__":
         test_image = "sample_image.jpg"  # Change this to your image file
 
         if not os.path.exists(test_image):
-            print(f"❌ Please create a test image named '{test_image}' or change the filename in the code")
+            print(f"Please create a test image named '{test_image}' or change the filename in the code")
             print("You can create one with: python -c \"from PIL import Image, ImageDraw; img = Image.new('RGB', (300, 400), 'lightblue'); draw = ImageDraw.Draw(img); draw.rectangle([100, 150, 200, 350], fill='red'); img.save('sample_image.jpg')\"")
         else:
             print(f"Processing image: {test_image}")
             success = remove_background_pixian(test_image)
             if success:
-                print("🎉 Done!")
+                print("Done!")
             else:
                 print("Failed to remove background")

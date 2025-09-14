@@ -8,14 +8,12 @@ const ImageEdit = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [imageData, setImageData] = useState(null);
-    const [imageName, setImageName] = useState("");
-    const [clothingType, setClothingType] = useState("top");
+    const [clothingType, setClothingType] = useState("tops");
 
     useEffect(() => {
         if (location.state?.imageData) {
             setImageData(location.state.imageData);
             const defaultName = location.state.imageData.name.split('.')[0];
-            setImageName(defaultName);
         }
     }, [location.state]);
 
@@ -27,11 +25,15 @@ const ImageEdit = () => {
 
         try {
             const formData = new FormData();
+            if (!imageData.file) {
+                console.error("No file found in imageData:", imageData);
+                alert("No file to upload. Please re-upload the image.");
+                return;
+            }
             formData.append('image', imageData.file);
             formData.append('clothingType', clothingType);
 
             console.log("Submitting:", {
-                imageName,
                 clothingType,
                 fileName: imageData.file.name
             });
@@ -40,11 +42,28 @@ const ImageEdit = () => {
                 method: 'POST',
                 body: formData
             });
+            if (!response.ok) {
+                const errorText = await response.text();  // Read the raw error text
+                console.error("Server responded with error:", errorText);
+                alert(`Upload failed: ${errorText || 'Unknown error'}`);
+                return;
+            }
 
-            const result = await response.json();
+            // const result = await response.json();
+
+            let result;
+            try {
+                result = await response.json();
+            } catch (jsonError) {
+                console.error("Error parsing JSON:", jsonError);
+                const errorText = await response.text();  // Fallback to getting raw text if JSON parsing fails
+                console.error("Raw response body:", errorText);
+                alert("Something went wrong with the response. Please try again.");
+                return;
+            }
 
             if (response.ok) {
-                alert(`Success! Image processed and saved as: ${result.processedImage}`);
+                alert(`Success! Image processed and saved!`);
                 console.log("Upload successful:", result);
                 navigate("/my-closet");
             } else {
@@ -148,6 +167,7 @@ const ImageEdit = () => {
                                 boxSizing: 'border-box'
                             }}
                         >
+
                             <option value="top">Top</option>
                             <option value="bottom">Bottom</option>
                             <option value="head">Head</option>
