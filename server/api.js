@@ -105,7 +105,7 @@ router.post('/creategroup', async (req, res) => {
 router.post('/joingroup', auth.ensureLoggedIn, async (req, res) => {
   try {
     const { code } = req.body;
-    
+
     if (!code || typeof code !== 'string' || code.length !== 4) {
       return res.status(400).json({ error: "Invalid group code. Must be exactly 4 characters." });
     }
@@ -113,7 +113,7 @@ router.post('/joingroup', auth.ensureLoggedIn, async (req, res) => {
     // Convert to uppercase and find group
     const groupCode = code.toUpperCase();
     const group = await Group.findOne({ code: groupCode });
-    
+
     if (!group) {
       return res.status(404).json({ error: "Group not found with this code." });
     }
@@ -127,10 +127,10 @@ router.post('/joingroup', auth.ensureLoggedIn, async (req, res) => {
     group.users.push(req.user.googleid);
     await group.save();
 
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       message: "Successfully joined the group!",
-      groupName: group.name 
+      groupName: group.name
     });
 
   } catch (error) {
@@ -144,7 +144,7 @@ router.get('/usergroups', auth.ensureLoggedIn, async (req, res) => {
   try {
     // Find all groups where the user is a member
     const groups = await Group.find({ users: req.user.googleid });
-    
+
     // For each group, get user details for all members
     const groupsWithMembers = await Promise.all(
       groups.map(async (group) => {
@@ -257,6 +257,9 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
     try {
       const s3Url = await uploadItem(outputPath, clothingType, `image_${req.user.googleid}_${req.user.closetSize}.png`);
       console.log("Image uploaded to S3:", s3Url);
+      await User.updateOne({ googleid: req.user.googleid }, {
+      $push: { [clothingType]: s3Url }
+    });
     } catch (err) {
       console.error("Error uploading to S3:", err);
       if (err.stack) console.error(err.stack);

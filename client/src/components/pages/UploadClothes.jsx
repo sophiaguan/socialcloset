@@ -18,8 +18,8 @@ const ImageEdit = () => {
     }, [location.state]);
 
     const handleSubmit = async () => {
-        if (!imageData || !imageName.trim()) {
-            alert("Please provide both an image.");
+        if (!imageData) {
+            alert("Please provide an image.");
             return;
         }
 
@@ -168,8 +168,8 @@ const ImageEdit = () => {
                             }}
                         >
 
-                            <option value="top">Top</option>
-                            <option value="bottom">Bottom</option>
+                            <option value="tops">Top</option>
+                            <option value="bottoms">Bottom</option>
                             <option value="head">Head</option>
                         </select>
                     </div>
