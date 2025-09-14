@@ -16,7 +16,7 @@ const path = require("path");
 // import models so we can interact with the database
 const User = require("./models/user");
 
-const { uploadAllFromTemp } = require("./upload"); 
+const { uploadAllFromTemp } = require("./upload");
 
 // import authentication library
 const auth = require("./auth");
@@ -62,6 +62,24 @@ router.post("/initsocket", (req, res) => {
   res.send({});
 });
 
+// Get user's clothing items
+router.get("/user-clothes", auth.ensureLoggedIn, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Combine tops and bottoms into a single array
+    const allClothes = [...(user.tops || []), ...(user.bottoms || [])];
+
+    res.json({ clothes: allClothes });
+  } catch (error) {
+    console.error("Error fetching user clothes:", error);
+    res.status(500).json({ error: "Failed to fetch user clothes" });
+  }
+});
+
 // |------------------------------|
 // | write your API methods below!|
 // |------------------------------|
@@ -77,7 +95,7 @@ const generateCode = () => {
 
 router.post('/creategroup', async (req, res) => {
   const groupId = generateCode();
-  const group = new Group({ name: req.body.name, code: groupId, users: [req.user.googleid]});
+  const group = new Group({ name: req.body.name, code: groupId, users: [req.user.googleid] });
   await group.save();
   res.json({ groupId });
 });
@@ -102,7 +120,7 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
 
     const { imageName, clothingType } = req.body;
     const tempFilePath = req.file.path;
-    
+
     // Generate sequential filename (image1, image2, etc.)
     const tempDir = 'temp/';
     const existingFiles = fs.readdirSync(tempDir).filter(file => file.startsWith('image') && file.endsWith('.png'));
@@ -169,7 +187,7 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
       createdAt: new Date().toISOString(),
       fileSize: fs.statSync(outputPath).size
     };
-    
+
     fs.writeFileSync(metadataPath, JSON.stringify(clothingData, null, 2));
     console.log("✅ Clothing metadata saved:", metadataPath);
 
