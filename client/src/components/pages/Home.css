@@ -1,1 +1,228 @@
-/* Fill me in :) */
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+/* Home Page Custom Styling */
+.home-container {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: calc(100vh - 60px);
+    position: relative;
+    overflow: hidden;
+}
+
+.home-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Signed-in User Styles */
+.home-signed-in {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 60px);
+    padding: 60px 40px;
+    position: relative;
+    z-index: 1;
+}
+
+.home-welcome-back {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 40px;
+    text-align: center;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    letter-spacing: -0.02em;
+}
+
+.home-closets-box {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+    min-width: 450px;
+    max-width: 550px;
+    position: relative;
+}
+
+.home-closets-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 30px;
+    text-align: center;
+    letter-spacing: -0.01em;
+}
+
+.home-closet-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 12px;
+    text-decoration: none;
+    color: #2d3748;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.home-closet-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s;
+}
+
+.home-closet-link:hover::before {
+    left: 100%;
+}
+
+.home-closet-link:hover {
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-color: rgba(160, 174, 192, 0.6);
+}
+
+.home-closet-link-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: #2d3748;
+}
+
+.home-closet-link-arrow {
+    font-size: 20px;
+    color: #667eea;
+    font-weight: 600;
+    transition: transform 0.3s ease;
+}
+
+.home-closet-link:hover .home-closet-link-arrow {
+    transform: translateX(4px);
+}
+
+/* Signed-out User Styles */
+.home-signed-out {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 60px);
+    text-align: center;
+    padding: 60px 40px;
+    position: relative;
+    z-index: 1;
+}
+
+.home-welcome-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 4.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 24px;
+    line-height: 1.1;
+    text-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
+    letter-spacing: -0.03em;
+}
+
+.home-welcome-subtitle {
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 60px;
+    max-width: 650px;
+    line-height: 1.5;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.home-google-login-container {
+    position: relative;
+}
+
+/* Custom Google Login Button Styling */
+.home-google-login-container .google-login-button {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 16px !important;
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem !important;
+    padding: 20px 40px !important;
+    color: #2d3748 !important;
+}
+
+.home-google-login-container .google-login-button:hover {
+    background: rgba(255, 255, 255, 1) !important;
+    transform: translateY(-3px) !important;
+    box-shadow:
+        0 25px 50px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .home-welcome-title {
+        font-size: 3rem;
+    }
+
+    .home-welcome-back {
+        font-size: 2.5rem;
+    }
+
+    .home-welcome-subtitle {
+        font-size: 1.3rem;
+    }
+
+    .home-closets-box {
+        min-width: 350px;
+        padding: 30px;
+    }
+
+    .home-closets-title {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .home-welcome-title {
+        font-size: 2.5rem;
+    }
+
+    .home-welcome-back {
+        font-size: 2rem;
+    }
+
+    .home-closets-box {
+        min-width: 300px;
+        padding: 25px;
+    }
+}
