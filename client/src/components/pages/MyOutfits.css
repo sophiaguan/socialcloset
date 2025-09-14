@@ -341,6 +341,41 @@
     background: transparent;
 }
 
+/* No Closet Selected Message */
+.no-closet-selected {
+    text-align: center;
+    padding: 60px 20px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin: 20px 0;
+}
+
+.no-closet-selected p {
+    font-size: 1.1rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+/* Loading Message */
+.loading-message {
+    text-align: center;
+    padding: 40px 20px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin: 20px 0;
+}
+
+.loading-message p {
+    font-size: 1rem;
+    color: #667eea;
+    margin: 0;
+    font-weight: 500;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
     .my-outfits-container {
