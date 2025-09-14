@@ -237,17 +237,16 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
     const { clothingType } = req.body;
     const tempFilePath = req.file.path;
 
-    await User.updateOne(
+    const closetSize = await User.updateOne(
       { googleid: req.user.googleid },
       { $inc: { closetSize: 1 } }
     );
     console.log(req.user.closetSize)
 
-    const closetSize1 = await req.user.closetSize
 
     // Generate filename
     const tempDir = 'temp/';
-    const outputPath = `${tempDir}image_${req.user.googleid}_${closetSize1}.png`;
+    const outputPath = `${tempDir}image_${req.user.googleid}_${closetSize}.png`;
     // ^ will need to change if we implement delete clohtes function
 
     console.log("Processing image:", tempFilePath);
@@ -262,7 +261,7 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
 
     // Call the Python script with the temp file (using conda Python)
     const pythonProcess = spawn('python', [
-      path.join(__dirname, '..', 'removebg.py'),
+      path.join(__dirname, '..', 'pixian.py'),
       tempFilePath,
       outputPath
     ]);
