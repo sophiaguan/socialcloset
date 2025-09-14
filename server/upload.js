@@ -6,17 +6,14 @@ import path from "path";
 console.log("AWS_ACCESS_KEY_ID:", process.env.AWS_ACCESS_KEY_ID);
 console.log("AWS_SECRET_ACCESS_KEY:", process.env.AWS_SECRET_ACCESS_KEY);
 
-
-require("dotenv").config();
-
 // dotenv.config();
 
 import { fromIni } from "@aws-sdk/credential-providers";
 
-const s3 = new S3Client({
-  region: process.env.AWS_REGION || "us-east-1",
-  credentials: fromIni({ profile: "default" }) // matches your ~/.aws/credentials
-});
+// const s3 = new S3Client({
+//   region: process.env.AWS_REGION || "us-east-1",
+//   credentials: fromIni({ profile: "default" }) // matches your ~/.aws/credentials
+// });
 
 
 

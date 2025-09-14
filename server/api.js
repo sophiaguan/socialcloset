@@ -12,12 +12,11 @@ const multer = require("multer");
 const FormData = require("form-data");
 const fs = require("fs");
 const path = require("path");
-const removeBg = require("remove.bg");
 
 // import models so we can interact with the database
 const User = require("./models/user");
 
-const { uploadAllFromTemp } = require("./upload"); 
+const { uploadAllFromTemp } = require("./upload");
 
 // import authentication library
 const auth = require("./auth");
@@ -63,6 +62,24 @@ router.post("/initsocket", (req, res) => {
   res.send({});
 });
 
+// Get user's clothing items
+router.get("/user-clothes", auth.ensureLoggedIn, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Combine tops and bottoms into a single array
+    const allClothes = [...(user.tops || []), ...(user.bottoms || [])];
+
+    res.json({ clothes: allClothes });
+  } catch (error) {
+    console.error("Error fetching user clothes:", error);
+    res.status(500).json({ error: "Failed to fetch user clothes" });
+  }
+});
+
 // |------------------------------|
 // | write your API methods below!|
 // |------------------------------|
@@ -78,7 +95,7 @@ const generateCode = () => {
 
 router.post('/creategroup', async (req, res) => {
   const groupId = generateCode();
-  const group = new Group({ name: req.body.name, code: groupId, users: [req.user.googleid]});
+  const group = new Group({ name: req.body.name, code: groupId, users: [req.user.googleid] });
   await group.save();
   res.json({ groupId });
 });
@@ -94,8 +111,6 @@ router.post("/upload-to-s3", async (req, res) => {
   }
 });
 
-
-
 // Upload clothing image and process it
 router.post("/upload-clothing", upload.single('image'), async (req, res) => {
   try {
@@ -105,26 +120,61 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
 
     const { imageName, clothingType } = req.body;
     const tempFilePath = req.file.path;
-    
+
     // Generate sequential filename (image1, image2, etc.)
     const tempDir = 'temp/';
     const existingFiles = fs.readdirSync(tempDir).filter(file => file.startsWith('image') && file.endsWith('.png'));
     const nextNumber = existingFiles.length + 1;
     const outputPath = `${tempDir}image${nextNumber}.png`;
 
-    console.log("Processing image with remove.bg:", tempFilePath);
-    // Call remove.bg API
-    const result = await removeBg.removeBackgroundFromImageFile({
-      path: tempFilePath,
-      apiKey: "QcUoJnhvRRgfjBCzhpQnnJjA".trim(),
-      size: 'auto',
-      type: 'auto',
-      outputFile: outputPath
-    });
-    
+    console.log("Processing image:", tempFilePath);
+    console.log("Clothing details:", { imageName, clothingType });
 
-    // Save processed image
-    // fs.writeFileSync(outputPath, result.base64img, "base64");
+    // Call Python script directly (more reliable than replicating API call)
+    const { spawn } = require('child_process');
+
+    console.log("Calling Python script to process image...");
+    console.log("Input file:", tempFilePath);
+    console.log("Output file:", outputPath);
+
+    // Call the Python script with the temp file (using conda Python)
+    const pythonProcess = spawn('python', [
+      path.join(__dirname, '..', 'removebg.py'),
+      tempFilePath,
+      outputPath
+    ]);
+
+    // Wait for Python script to complete
+    await new Promise((resolve, reject) => {
+      pythonProcess.on('close', (code) => {
+        if (code === 0) {
+          console.log("✅ Python script completed successfully");
+          resolve();
+        } else {
+          console.error(`❌ Python script failed with code ${code}`);
+          reject(new Error(`Python script failed with exit code ${code}`));
+        }
+      });
+
+      pythonProcess.on('error', (error) => {
+        console.error("❌ Error running Python script:", error);
+        reject(error);
+      });
+
+      // Log Python output
+      pythonProcess.stdout.on('data', (data) => {
+        console.log("Python output:", data.toString());
+      });
+
+      pythonProcess.stderr.on('data', (data) => {
+        console.error("Python error:", data.toString());
+      });
+    });
+
+    // Check if the output file was created
+    if (!fs.existsSync(outputPath)) {
+      throw new Error("Python script did not create output file");
+    }
 
     // Save clothing metadata to JSON file
     const metadataPath = outputPath.replace('.png', '_metadata.json');
@@ -137,7 +187,7 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
       createdAt: new Date().toISOString(),
       fileSize: fs.statSync(outputPath).size
     };
-    
+
     fs.writeFileSync(metadataPath, JSON.stringify(clothingData, null, 2));
     console.log("✅ Clothing metadata saved:", metadataPath);
 

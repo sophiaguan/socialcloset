@@ -5,5 +5,7 @@
   "originalImage": "Grey_Tshirt.jpg",
   "processedImage": "image2.png",
   "createdAt": "2025-09-13T21:25:31.057Z",
-  "fileSize": 132338
+  "fileSize": 132338,
+  "s3Url": "https://socialcloset.s3.amazonaws.com/top/image2.png",
+  "uploadedAt": "2025-09-14T00:38:18.603Z"
 }
