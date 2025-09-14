@@ -1,0 +1,585 @@
+/* Import Google Fonts (same as other pages) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+/* MyGroups Page Custom Styling */
+.my-groups-container {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: calc(100vh - 70px);
+    padding: 60px 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.my-groups-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Page Header */
+.my-groups-header {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 50px;
+}
+
+.my-groups-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 15px;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.my-groups-subtitle {
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: #4a5568;
+    margin-bottom: 0;
+    line-height: 1.5;
+}
+
+/* Group Actions Container */
+.group-actions-container {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 50px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+/* Create Group Section */
+.create-group-section {
+    position: relative;
+    z-index: 1;
+}
+
+.create-group-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 25px;
+    letter-spacing: -0.01em;
+}
+
+.create-group-form {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    padding: 30px 40px;
+    margin-bottom: 30px;
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.create-group-input {
+    width: 100%;
+    padding: 15px 20px;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 15px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #2d3748;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.create-group-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.create-group-input::placeholder {
+    color: #9ca3af;
+}
+
+.create-group-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    margin-right: 15px;
+}
+
+.create-group-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.create-group-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.create-group-success {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 15px;
+    padding: 15px 20px;
+    margin-top: 20px;
+    color: #059669;
+    font-weight: 500;
+}
+
+/* Join Group Section */
+.join-group-section {
+    position: relative;
+    z-index: 1;
+}
+
+.join-group-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 25px;
+    letter-spacing: -0.01em;
+}
+
+.join-group-form {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    padding: 30px 40px;
+    margin-bottom: 30px;
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.join-group-input {
+    width: 200px;
+    padding: 15px 20px;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 15px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #2d3748;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.join-group-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.join-group-input::placeholder {
+    color: #9ca3af;
+}
+
+.join-group-btn {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+}
+
+.join-group-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+}
+
+.join-group-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.join-group-message {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 15px;
+    padding: 15px 20px;
+    margin-top: 20px;
+    color: #dc2626;
+    font-weight: 500;
+}
+
+/* User Groups Section */
+.user-groups-section {
+    position: relative;
+    z-index: 1;
+    margin-top: 40px;
+}
+
+.user-groups-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 25px;
+    letter-spacing: -0.01em;
+}
+
+.user-groups-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.group-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 25px;
+    transition: all 0.3s ease;
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.group-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.6s;
+}
+
+.group-card:hover::before {
+    left: 100%;
+}
+
+.group-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.group-card.editing {
+    cursor: default;
+}
+
+.group-card.editing:hover {
+    transform: none;
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.group-name-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.group-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 0;
+    flex: 1;
+}
+
+.group-name-input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    flex: 1;
+    outline: none;
+}
+
+.group-edit-btn {
+    background: #17a2b8;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.group-edit-btn:hover {
+    background: #138496;
+}
+
+.group-save-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.group-save-btn:hover {
+    background: #218838;
+}
+
+.group-cancel-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.group-cancel-btn:hover {
+    background: #5a6268;
+}
+
+.group-code {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    margin-left: 10px;
+}
+
+.group-members {
+    margin-top: 15px;
+}
+
+.group-members-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b7280;
+    margin: 0 0 10px 0;
+}
+
+.group-members-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.group-member {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+/* Loading State */
+.loading-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6b7280;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .my-groups-container {
+        padding: 50px 60px;
+    }
+
+    .group-actions-container {
+        gap: 30px;
+    }
+
+    .create-group-form,
+    .join-group-form {
+        padding: 25px 30px;
+    }
+
+    .group-card {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .my-groups-container {
+        padding: 40px 40px;
+    }
+
+    .my-groups-title {
+        font-size: 2.8rem;
+    }
+
+    .group-actions-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .create-group-title,
+    .join-group-title,
+    .user-groups-title {
+        font-size: 1.6rem;
+    }
+
+    .create-group-form,
+    .join-group-form {
+        padding: 20px 25px;
+    }
+
+    .join-group-input {
+        width: 180px;
+    }
+
+    .group-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .group-name-section {
+        width: 100%;
+    }
+
+    .group-code {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .my-groups-container {
+        padding: 30px 20px;
+    }
+
+    .my-groups-title {
+        font-size: 2.2rem;
+    }
+
+    .my-groups-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .create-group-title,
+    .join-group-title,
+    .user-groups-title {
+        font-size: 1.4rem;
+    }
+
+    .create-group-form,
+    .join-group-form {
+        padding: 15px 20px;
+    }
+
+    .join-group-input {
+        width: 160px;
+    }
+
+    .create-group-input,
+    .join-group-input {
+        padding: 12px 16px;
+        font-size: 0.9rem;
+    }
+
+    .create-group-btn,
+    .join-group-btn {
+        padding: 12px 24px;
+        font-size: 0.9rem;
+    }
+
+    .group-card {
+        padding: 15px;
+    }
+
+    .group-name {
+        font-size: 1.3rem;
+    }
+
+    .group-name-input {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+
+    .group-edit-btn,
+    .group-save-btn,
+    .group-cancel-btn {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+
+    .group-code {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .group-member {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+}

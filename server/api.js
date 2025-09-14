@@ -168,6 +168,41 @@ router.get('/usergroups', auth.ensureLoggedIn, async (req, res) => {
   }
 });
 
+// Edit group name
+router.post('/editgroupname', auth.ensureLoggedIn, async (req, res) => {
+  try {
+    const { groupId, newName } = req.body;
+
+    if (!groupId || !newName || !newName.trim()) {
+      return res.status(400).json({ error: "Group ID and new name are required" });
+    }
+
+    // Find the group and check if user is a member
+    const group = await Group.findById(groupId);
+    if (!group) {
+      return res.status(404).json({ error: "Group not found" });
+    }
+
+    if (!group.users.includes(req.user.googleid)) {
+      return res.status(403).json({ error: "You are not a member of this group" });
+    }
+
+    // Update the group name
+    group.name = newName.trim();
+    await group.save();
+
+    res.json({
+      success: true,
+      message: "Group name updated successfully",
+      newName: group.name
+    });
+
+  } catch (error) {
+    console.error("Error updating group name:", error);
+    res.status(500).json({ error: "Failed to update group name" });
+  }
+});
+
 // Upload all processed images in /temp to S3
 // router.post("/upload-to-s3", async (req, res) => {
 //   try {
