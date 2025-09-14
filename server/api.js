@@ -15,6 +15,7 @@ const path = require("path");
 
 // import models so we can interact with the database
 const User = require("./models/user");
+const Group = require("./models/group");
 
 const { uploadAllFromTemp } = require("./upload");
 
@@ -98,6 +99,44 @@ router.post('/creategroup', async (req, res) => {
   const group = new Group({ name: req.body.name, code: groupId, users: [req.user.googleid] });
   await group.save();
   res.json({ groupId });
+});
+
+// Join group by code
+router.post('/joingroup', auth.ensureLoggedIn, async (req, res) => {
+  try {
+    const { code } = req.body;
+    
+    if (!code || typeof code !== 'string' || code.length !== 4) {
+      return res.status(400).json({ error: "Invalid group code. Must be exactly 4 characters." });
+    }
+
+    // Convert to uppercase and find group
+    const groupCode = code.toUpperCase();
+    const group = await Group.findOne({ code: groupCode });
+    
+    if (!group) {
+      return res.status(404).json({ error: "Group not found with this code." });
+    }
+
+    // Check if user is already in the group
+    if (group.users.includes(req.user.googleid)) {
+      return res.status(400).json({ error: "You are already a member of this group." });
+    }
+
+    // Add user to the group
+    group.users.push(req.user.googleid);
+    await group.save();
+
+    res.json({ 
+      success: true, 
+      message: "Successfully joined the group!",
+      groupName: group.name 
+    });
+
+  } catch (error) {
+    console.error("Error joining group:", error);
+    res.status(500).json({ error: "Failed to join group" });
+  }
 });
 
 // Upload all processed images in /temp to S3
