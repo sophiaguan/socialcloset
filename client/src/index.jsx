@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./components/App";
 import Home from "./components/pages/Home";
 import MyCloset from "./components/pages/MyCloset";
+import AllClothes from "./components/pages/AllClothes";
 import MyOutfits from "./components/pages/MyOutfits";
 import Friends from "./components/pages/Friends";
 import ImageEdit from "./components/pages/UploadClothes";
@@ -24,6 +25,7 @@ const router = createBrowserRouter(
     <Route errorElement={<NotFound />} element={<App />}>
       <Route path="/" element={<Home />} />
       <Route path="/my-closet" element={<MyCloset />} />
+      <Route path="/all-clothes" element={<AllClothes />} />
       <Route path="/my-outfits" element={<MyOutfits />} />
       <Route path="/friends" element={<Friends />} />
       <Route path="/edit-image" element={<ImageEdit />} />

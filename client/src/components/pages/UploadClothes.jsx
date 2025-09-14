@@ -72,20 +72,20 @@ const ImageEdit = () => {
     }
 
     return (
-        <div>
-            <nav style={{ marginBottom: "20px" }}>
+        <div style={{ padding: "40px 60px" }}>
+            <nav style={{ marginBottom: "15px" }}>
                 <Link to="/my-closet" style={{ textDecoration: "none", color: "#007bff" }}>
                     ← Back to My Closet
                 </Link>
             </nav>
 
-            <h1>Upload Your Clothes</h1>
-            <p>Add details about your clothing item.</p>
+            <h1 style={{ marginBottom: "10px" }}>Upload Your Clothes</h1>
+            <p style={{ marginBottom: "20px" }}>Add details about your clothing item.</p>
 
             <div style={{
                 display: 'flex',
                 gap: '40px',
-                marginTop: '30px',
+                marginTop: '20px',
                 flexWrap: 'wrap'
             }}>
                 {/* Image Preview */}

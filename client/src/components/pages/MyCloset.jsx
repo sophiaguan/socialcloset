@@ -57,25 +57,160 @@ const MyCloset = () => {
     };
 
     return (
-        <div>
-            <h1>My Closet</h1>
-            <p>Manage your wardrobe and upload new clothes to your collection.</p>
+        <div style={{ padding: "40px 60px" }}>
+            <h1 style={{ marginBottom: "10px" }}>My Closet</h1>
+            <p style={{ marginBottom: "15px" }}>Manage your wardrobe and upload new clothes to your collection.</p>
 
-            <button
-                onClick={handleUploadClothes}
-                style={{
-                    backgroundColor: "#007bff",
-                    color: "white",
-                    border: "none",
-                    padding: "12px 24px",
-                    borderRadius: "6px",
-                    fontSize: "16px",
-                    cursor: "pointer",
-                    marginTop: "20px"
-                }}
-            >
-                Upload Clothes
-            </button>
+            {/* Four Circle Buttons */}
+            <div style={{
+                display: "flex",
+                justifyContent: "space-between",
+                gap: "20px",
+                marginTop: "30px",
+                flexWrap: "wrap"
+            }}>
+                <button
+                    onClick={handleUploadClothes}
+                    style={{
+                        backgroundColor: "#007bff",
+                        color: "white",
+                        border: "none",
+                        width: "120px",
+                        height: "120px",
+                        borderRadius: "50%",
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        textAlign: "center",
+                        transition: "all 0.3s ease",
+                        boxShadow: "0 4px 12px rgba(0, 123, 255, 0.3)"
+                    }}
+                    onMouseOver={(e) => {
+                        e.target.style.backgroundColor = "#0056b3";
+                        e.target.style.transform = "translateY(-2px)";
+                        e.target.style.boxShadow = "0 6px 16px rgba(0, 123, 255, 0.4)";
+                    }}
+                    onMouseOut={(e) => {
+                        e.target.style.backgroundColor = "#007bff";
+                        e.target.style.transform = "translateY(0)";
+                        e.target.style.boxShadow = "0 4px 12px rgba(0, 123, 255, 0.3)";
+                    }}
+                >
+                    Upload Clothes
+                </button>
+
+                <button
+                    onClick={() => {
+                        navigate("/all-clothes");
+                    }}
+                    style={{
+                        backgroundColor: "#28a745",
+                        color: "white",
+                        border: "none",
+                        width: "120px",
+                        height: "120px",
+                        borderRadius: "50%",
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        textAlign: "center",
+                        transition: "all 0.3s ease",
+                        boxShadow: "0 4px 12px rgba(40, 167, 69, 0.3)"
+                    }}
+                    onMouseOver={(e) => {
+                        e.target.style.backgroundColor = "#1e7e34";
+                        e.target.style.transform = "translateY(-2px)";
+                        e.target.style.boxShadow = "0 6px 16px rgba(40, 167, 69, 0.4)";
+                    }}
+                    onMouseOut={(e) => {
+                        e.target.style.backgroundColor = "#28a745";
+                        e.target.style.transform = "translateY(0)";
+                        e.target.style.boxShadow = "0 4px 12px rgba(40, 167, 69, 0.3)";
+                    }}
+                >
+                    All Clothes
+                </button>
+
+                <button
+                    onClick={() => {
+                        // Scroll to "Your Clothes" section
+                        const yourClothesSection = document.querySelector('[data-section="your-clothes"]');
+                        if (yourClothesSection) {
+                            yourClothesSection.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }}
+                    style={{
+                        backgroundColor: "#ffc107",
+                        color: "#212529",
+                        border: "none",
+                        width: "120px",
+                        height: "120px",
+                        borderRadius: "50%",
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        textAlign: "center",
+                        transition: "all 0.3s ease",
+                        boxShadow: "0 4px 12px rgba(255, 193, 7, 0.3)"
+                    }}
+                    onMouseOver={(e) => {
+                        e.target.style.backgroundColor = "#e0a800";
+                        e.target.style.transform = "translateY(-2px)";
+                        e.target.style.boxShadow = "0 6px 16px rgba(255, 193, 7, 0.4)";
+                    }}
+                    onMouseOut={(e) => {
+                        e.target.style.backgroundColor = "#ffc107";
+                        e.target.style.transform = "translateY(0)";
+                        e.target.style.boxShadow = "0 4px 12px rgba(255, 193, 7, 0.3)";
+                    }}
+                >
+                    Browse Collections
+                </button>
+
+                <button
+                    onClick={() => {
+                        navigate("/my-outfits");
+                    }}
+                    style={{
+                        backgroundColor: "#dc3545",
+                        color: "white",
+                        border: "none",
+                        width: "120px",
+                        height: "120px",
+                        borderRadius: "50%",
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        textAlign: "center",
+                        transition: "all 0.3s ease",
+                        boxShadow: "0 4px 12px rgba(220, 53, 69, 0.3)"
+                    }}
+                    onMouseOver={(e) => {
+                        e.target.style.backgroundColor = "#c82333";
+                        e.target.style.transform = "translateY(-2px)";
+                        e.target.style.boxShadow = "0 6px 16px rgba(220, 53, 69, 0.4)";
+                    }}
+                    onMouseOut={(e) => {
+                        e.target.style.backgroundColor = "#dc3545";
+                        e.target.style.transform = "translateY(0)";
+                        e.target.style.boxShadow = "0 4px 12px rgba(220, 53, 69, 0.3)";
+                    }}
+                >
+                    Find Outfits
+                </button>
+            </div>
 
             {/* Hidden file input */}
             <input
@@ -87,12 +222,12 @@ const MyCloset = () => {
                 style={{ display: 'none' }}
             />
 
-            <div style={{ marginTop: "40px" }}>
-                <h2>Your Clothes</h2>
+            <div style={{ marginTop: "30px" }} data-section="your-clothes">
+                <h2 style={{ marginBottom: "15px" }}>Your Clothes</h2>
 
                 {/* Tops Section */}
-                <div style={{ marginBottom: "40px" }}>
-                    <h3 style={{ marginBottom: "20px", color: "#333" }}>Tops</h3>
+                <div style={{ marginBottom: "20px" }}>
+                    <h3 style={{ marginBottom: "10px", color: "#333" }}>Tops</h3>
                     <div style={{
                         display: 'grid',
                         gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
@@ -131,7 +266,7 @@ const MyCloset = () => {
 
                 {/* Bottoms Section */}
                 <div>
-                    <h3 style={{ marginBottom: "20px", color: "#333" }}>Bottoms</h3>
+                    <h3 style={{ marginBottom: "10px", color: "#333" }}>Bottoms</h3>
                     <div style={{
                         display: 'grid',
                         gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',

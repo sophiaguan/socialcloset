@@ -18,7 +18,7 @@ const Home = () => {
           alignItems: "center",
           justifyContent: "center",
           minHeight: "calc(100vh - 60px)",
-          padding: "40px 20px"
+          padding: "60px 40px"
         }}>
           <h1 style={{
             fontSize: "3rem",
@@ -114,7 +114,7 @@ const Home = () => {
           justifyContent: "center",
           minHeight: "calc(100vh - 60px)", // Full height minus navbar
           textAlign: "center",
-          padding: "40px 20px"
+          padding: "60px 40px"
         }}>
           <h1 style={{
             fontSize: "4rem",
