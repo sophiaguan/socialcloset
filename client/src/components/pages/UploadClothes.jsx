@@ -175,7 +175,8 @@ const ImageEdit = () => {
 
                             <option value="tops">Top</option>
                             <option value="bottoms">Bottom</option>
-                            <option value="head">Head</option>
+                            <option value="heads">Headwear</option>
+                            <option value="shoes">Shoes</option>
                         </select>
                     </div>
 
