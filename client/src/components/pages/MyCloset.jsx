@@ -5,17 +5,16 @@ import "../../utilities.css";
 import "./MyCloset.css";
 import ImageCarousel from "../ImageCarousel";
 
-    console.log("starting now");
     const MyCloset = () => {
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
     const [clothingData, setClothingData] = useState({
         tops: [],
         bottoms: [],
-        heads: []
+        heads: [],
+        shoes: []
       });
 
-    console.log("JAJAJAJA");
 
     useEffect(() => {
       const fetchClothes = async () => {
@@ -159,6 +158,13 @@ import ImageCarousel from "../ImageCarousel";
                     images={clothingData.heads}
                     title="Heads"
                     type="Head"
+                />
+
+                {/* Shoes Carousel */}
+                <ImageCarousel
+                    images={clothingData.shoes}
+                    title="Shoes"
+                    type="Shoe"
                 />
             </div>
         </div>
