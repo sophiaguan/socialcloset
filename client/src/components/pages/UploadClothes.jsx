@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import "../../utilities.css";
 
 const ImageEdit = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const [imageData, setImageData] = useState(null);
     const [imageName, setImageName] = useState("");
     const [clothingType, setClothingType] = useState("top");
@@ -12,7 +13,6 @@ const ImageEdit = () => {
     useEffect(() => {
         if (location.state?.imageData) {
             setImageData(location.state.imageData);
-            // Set default name based on original filename
             const defaultName = location.state.imageData.name.split('.')[0];
             setImageName(defaultName);
         }
@@ -25,7 +25,6 @@ const ImageEdit = () => {
         }
 
         try {
-            // Create FormData to send file and metadata
             const formData = new FormData();
             formData.append('image', imageData.file);
             formData.append('imageName', imageName);
@@ -45,15 +44,16 @@ const ImageEdit = () => {
             const result = await response.json();
 
             if (response.ok) {
-                alert(`✅ Success! Image processed and saved as: ${result.processedImage}`);
+                alert(`Success! Image processed and saved as: ${result.processedImage}`);
                 console.log("Upload successful:", result);
+                navigate("/my-closet");
             } else {
-                alert(`❌ Error: ${result.error}`);
+                alert(`Error: ${result.error}`);
                 console.error("Upload failed:", result);
             }
         } catch (error) {
             console.error("Error submitting:", error);
-            alert("❌ Failed to submit. Please try again.");
+            alert("Failed to submit. Please try again.");
         }
     };
 
@@ -79,7 +79,7 @@ const ImageEdit = () => {
                 </Link>
             </nav>
 
-            <h1>Edit Your Clothes</h1>
+            <h1>Upload Your Clothes</h1>
             <p>Add details about your clothing item.</p>
 
             <div style={{
