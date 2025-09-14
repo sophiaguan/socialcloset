@@ -139,7 +139,7 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
 
     // Call the Python script with the temp file (using conda Python)
     const pythonProcess = spawn('python', [
-      path.join(__dirname, '..', 'pixian.py'),
+      path.join(__dirname, '..', 'removebg.py'),
       tempFilePath,
       outputPath
     ]);
