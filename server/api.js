@@ -72,7 +72,7 @@ router.get("/user-clothes", auth.ensureLoggedIn, async (req, res) => {
     }
 
     // Combine tops and bottoms into a single array
-    const allClothes = [...(user.tops || []), ...(user.bottoms || [])];
+    const allClothes = [...(user.tops || []), ...(user.bottoms || []), ...(user.heads || [])];
 
     res.json({ clothes: allClothes });
   } catch (error) {
@@ -212,7 +212,7 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
 
     // Call the Python script with the temp file (using conda Python)
     const pythonProcess = spawn('python', [
-      path.join(__dirname, '..', 'pixian.py'), // can change to removebg.py
+      path.join(__dirname, '..', 'pixian.py'),
       tempFilePath,
       outputPath
     ]);
