@@ -1,5 +1,7 @@
 import React from "react";
 import "../../utilities.css";
+import "./AllClothes.css";
+import BackButton from "../BackButton";
 
 const AllClothes = () => {
     // Hardcoded clothing data (same as MyCloset for now)
@@ -32,65 +34,24 @@ const AllClothes = () => {
     ];
 
     return (
-        <div style={{ padding: "40px 60px" }}>
-            <h1 style={{ marginBottom: "10px" }}>All Clothes</h1>
-            <p style={{ marginBottom: "15px" }}>Browse through your entire wardrobe collection.</p>
+        <div className="all-clothes-container">
+            <div className="all-clothes-header">
+                <BackButton destination="/my-closet" label="Back to My Closet" />
+
+                <h1 className="all-clothes-title">All Clothes</h1>
+                <p className="all-clothes-subtitle">Browse through your entire wardrobe collection.</p>
+            </div>
 
             {/* Gallery Grid */}
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-                gap: '25px',
-                marginTop: "30px"
-            }}>
+            <div className="all-clothes-gallery">
                 {allClothes.map((clothing) => (
-                    <div key={clothing.id} style={{
-                        border: '1px solid #ddd',
-                        borderRadius: '12px',
-                        padding: '15px',
-                        backgroundColor: '#f9f9f9',
-                        textAlign: 'center',
-                        transition: 'all 0.3s ease',
-                        cursor: 'pointer',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-                    }}
-                        onMouseOver={(e) => {
-                            e.currentTarget.style.transform = 'translateY(-5px)';
-                            e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
-                            e.currentTarget.style.backgroundColor = '#fff';
-                        }}
-                        onMouseOut={(e) => {
-                            e.currentTarget.style.transform = 'translateY(0)';
-                            e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-                            e.currentTarget.style.backgroundColor = '#f9f9f9';
-                        }}
-                    >
+                    <div key={clothing.id} className="all-clothes-card">
                         <img
                             src={clothing.url}
                             alt={`${clothing.type} item`}
-                            style={{
-                                width: '100%',
-                                height: '250px',
-                                objectFit: 'cover',
-                                borderRadius: '8px',
-                                marginBottom: '15px'
-                            }}
                         />
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '8px'
-                        }}>
-                            <span style={{
-                                backgroundColor: clothing.type === 'top' ? '#007bff' : '#28a745',
-                                color: 'white',
-                                padding: '4px 12px',
-                                borderRadius: '20px',
-                                fontSize: '12px',
-                                fontWeight: '600',
-                                textTransform: 'uppercase'
-                            }}>
+                        <div className="all-clothes-card-content">
+                            <span className="all-clothes-label">
                                 {clothing.type}
                             </span>
                         </div>

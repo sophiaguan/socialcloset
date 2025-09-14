@@ -30,7 +30,7 @@ const ImageCarousel = ({ images, title, type }) => {
                         onClick={prevSlide}
                         disabled={currentIndex === 0}
                     >
-                        ‹
+                        ←
                     </button>
                 )}
 
@@ -62,7 +62,7 @@ const ImageCarousel = ({ images, title, type }) => {
                         onClick={nextSlide}
                         disabled={currentIndex === maxIndex}
                     >
-                        ›
+                        →
                     </button>
                 )}
             </div>

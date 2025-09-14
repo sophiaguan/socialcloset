@@ -50,10 +50,7 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.carousel-image:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-}
+
 
 .carousel-item-label {
     margin-top: 15px;
@@ -79,7 +76,7 @@
     justify-content: center;
     font-size: 24px;
     font-weight: bold;
-    color: #2d3748;
+    color: #667eea;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 10;
