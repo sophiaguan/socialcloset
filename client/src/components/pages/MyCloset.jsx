@@ -28,10 +28,10 @@ import ImageCarousel from "../ImageCarousel";
           console.error("Failed to fetch clothing images", err);
         }
       };
-    
+
       fetchClothes();
     }, []);
-    
+
 
     const handleUploadClothes = () => {
         fileInputRef.current?.click();

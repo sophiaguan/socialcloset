@@ -213,18 +213,74 @@ router.post('/editgroupname', auth.ensureLoggedIn, async (req, res) => {
   }
 });
 
-// Upload all processed images in /temp to S3
-// router.post("/upload-to-s3", async (req, res) => {
-//   try {
-//     await uploadAllFromTemp();
-//     res.json({ success: true, message: "All images uploaded to S3" });
-//   } catch (err) {
-//     console.error("Error uploading to S3:", err);
-//     res.status(500).json({ success: false, error: "S3 upload failed" });
-//   }
-// });
+// Get shared items for a user in a group
+router.get("/shared-items/:groupCode/:userId", async (req, res) => {
+  const { groupCode, userId } = req.params;
 
-// Upload clothing image and process it
+  try {
+    const group = await Group.findOne({ code: groupCode });
+
+    if (!group) {
+      return res.status(404).json({ error: "Group not found" });
+    }
+
+    // Filter items for the user based on filename prefix
+    const filterByUser = (items) => items.filter(item => item.startsWith(`${userId}_`));
+
+    // const sharedItems = {
+    //   heads: filterByUser(group.heads),
+    //   tops: filterByUser(group.tops),
+    //   bottoms: filterByUser(group.bottoms),
+    //   shoes: filterByUser(group.shoes),
+    // };
+    const sharedItems = [
+      ...filterByUser(group.heads),
+      ...filterByUser(group.tops),
+      ...filterByUser(group.bottoms),
+      ...filterByUser(group.shoes)
+    ];
+
+    res.json({ sharedItems });
+  } catch (err) {
+      console.error("Error fetching shared items:", err);
+      res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.post("/add-items/:groupCode", async (req, res) => {
+    const { groupCode } = req.params;
+    const { userId, items } = req.body;
+
+    if (!userId || !Array.isArray(items)) {
+        return res.status(400).json({ message: "Missing required data" });
+    }
+
+    try {
+        const group = await Group.findOne({ code: groupCode });
+        if (!group) {
+            return res.status(404).json({ message: "Group not found" });
+        }
+
+        for (const item of items) {
+          const filename = item.split("/").pop(); // e.g., "googleid_top_1699999999999.png"
+          const parts = filename.split("_");
+          if (parts.length < 3) continue; // sanity check
+          const type = parts[1];
+          if (group[type]) {
+              group[type].push(item);
+          } else {
+              console.warn(`Unknown clothing type: ${type}`);
+          }
+        }
+
+        await group.save();
+
+        res.status(200).json({ message: "Items shared successfully" });
+    } catch (error) {
+        console.error("Error adding items to group closet:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
 
 router.post("/upload-clothing", upload.single('image'), async (req, res) => {
   try {
@@ -343,13 +399,11 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
 // Get all clothing image URLs for the logged-in user
 router.get("/clothing-images", auth.ensureLoggedIn, async (req, res) => {
   try {
-    console.log("woaza");
     const user = await User.findOne({ googleid: req.user.googleid });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    console.log("woazazzaa2")
 
     // Collect clothing image URLs
     const images = {
@@ -362,10 +416,41 @@ router.get("/clothing-images", auth.ensureLoggedIn, async (req, res) => {
 
     res.json( images );
   } catch (error) {
-    console.error("Error retrieving clothing images:", error);
-    res.status(500).json({ error: "Failed to retrieve clothing images" });
+      console.error("Error retrieving clothing images:", error);
+      res.status(500).json({ error: "Failed to retrieve clothing images" });
   }
 });
+
+// router.get("/shared-clothing-images", auth.ensureLoggedIn, async (req, res) => {
+//   try {
+//     const user = await User.findOne({ googleid: req.user.googleid });
+
+//     if (!user) {
+//       return res.status(404).json({ error: "User not found" });
+//     }
+
+//     const cleanImageUrls = (urls) => {
+//       return urls.map(url => {
+//         const underscoreIndex = url.lastIndexOf("_");
+//         if (underscoreIndex === -1) return url;
+//         return url.substring(0, underscoreIndex) + ".png";
+//       });
+//     };
+
+//     const images = {
+//       tops: cleanImageUrls(user.tops || []),
+//       bottoms: cleanImageUrls(user.bottoms || []),
+//       heads: cleanImageUrls(user.heads || []),
+//       shoes: cleanImageUrls(user.shoes || [])
+//     };
+//     console.log(images)
+
+//     res.json( images );
+//   } catch (error) {
+//       console.error("Error retrieving clothing images:", error);
+//       res.status(500).json({ error: "Failed to retrieve clothing images" });
+//   }
+// });
 
 // anything else falls to this "not found" case
 router.all("*", (req, res) => {
