@@ -1,0 +1,314 @@
+/* Import Google Fonts (same as Home page) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+/* MyCloset Page Custom Styling */
+.my-closet-container {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: calc(100vh - 70px);
+    padding: 60px 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.my-closet-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Page Header */
+.my-closet-header {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 50px;
+}
+
+.my-closet-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 15px;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.my-closet-subtitle {
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: #4a5568;
+    margin-bottom: 0;
+    line-height: 1.5;
+}
+
+/* Action Buttons Container */
+.my-closet-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin: 50px 0;
+    position: relative;
+    z-index: 1;
+}
+
+/* Individual Action Button */
+.my-closet-action-btn {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 40px 30px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.my-closet-action-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.6s;
+}
+
+.my-closet-action-btn:hover::before {
+    left: 100%;
+}
+
+.my-closet-action-btn:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Button Icons */
+.my-closet-btn-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.my-closet-action-btn:hover .my-closet-btn-icon {
+    transform: scale(1.1);
+}
+
+/* Button Titles */
+.my-closet-btn-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+}
+
+/* Button Descriptions */
+.my-closet-btn-desc {
+    font-size: 0.95rem;
+    color: #6b7280;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Specific Button Colors */
+.my-closet-action-btn.upload {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 197, 253, 0.1) 100%);
+    border-color: rgba(59, 130, 246, 0.2);
+}
+
+.my-closet-action-btn.upload:hover {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(147, 197, 253, 0.15) 100%);
+}
+
+.my-closet-action-btn.upload .my-closet-btn-title {
+    color: #3b82f6;
+}
+
+.my-closet-action-btn.upload .my-closet-btn-icon {
+    color: #3b82f6;
+}
+
+.my-closet-action-btn.all-clothes {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(134, 239, 172, 0.1) 100%);
+    border-color: rgba(34, 197, 94, 0.2);
+}
+
+.my-closet-action-btn.all-clothes:hover {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(134, 239, 172, 0.15) 100%);
+}
+
+.my-closet-action-btn.all-clothes .my-closet-btn-title {
+    color: #22c55e;
+}
+
+.my-closet-action-btn.all-clothes .my-closet-btn-icon {
+    color: #22c55e;
+}
+
+.my-closet-action-btn.browse {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
+    border-color: rgba(245, 158, 11, 0.2);
+}
+
+.my-closet-action-btn.browse:hover {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(251, 191, 36, 0.15) 100%);
+}
+
+.my-closet-action-btn.browse .my-closet-btn-title {
+    color: #f59e0b;
+}
+
+.my-closet-action-btn.browse .my-closet-btn-icon {
+    color: #f59e0b;
+}
+
+.my-closet-action-btn.outfits {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(252, 165, 165, 0.1) 100%);
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.my-closet-action-btn.outfits:hover {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(252, 165, 165, 0.15) 100%);
+}
+
+.my-closet-action-btn.outfits .my-closet-btn-title {
+    color: #ef4444;
+}
+
+.my-closet-action-btn.outfits .my-closet-btn-icon {
+    color: #ef4444;
+}
+
+/* Your Clothes Section */
+.my-closet-clothes-section {
+    margin-top: 60px;
+    position: relative;
+    z-index: 1;
+}
+
+.my-closet-clothes-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 30px;
+    letter-spacing: -0.01em;
+}
+
+/* Clothes Grid */
+.my-closet-clothes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+/* Individual Clothes Card */
+.my-closet-clothes-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.my-closet-clothes-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.my-closet-clothes-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+.my-closet-clothes-card p {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .my-closet-actions {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+    }
+
+    .my-closet-action-btn {
+        min-height: 180px;
+        padding: 35px 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .my-closet-container {
+        padding: 40px 40px;
+    }
+
+    .my-closet-title {
+        font-size: 2.8rem;
+    }
+
+    .my-closet-actions {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .my-closet-action-btn {
+        min-height: 160px;
+        padding: 30px 20px;
+    }
+
+    .my-closet-btn-icon {
+        font-size: 2.5rem;
+    }
+
+    .my-closet-btn-title {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .my-closet-container {
+        padding: 30px 20px;
+    }
+
+    .my-closet-title {
+        font-size: 2.2rem;
+    }
+
+    .my-closet-action-btn {
+        min-height: 140px;
+        padding: 25px 15px;
+    }
+}
