@@ -169,6 +169,11 @@ const ImageEdit = () => {
                                 boxSizing: 'border-box'
                             }}
                         >
+
+                            <option value="tops">Top</option>
+                            <option value="bottoms">Bottom</option>
+                            <option value="heads">Headwear</option>
+                            <option value="shoes">Shoes</option>
                             <option value="top">Top</option>
                             <option value="bottom">Bottom</option>
                         </select>

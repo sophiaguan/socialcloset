@@ -96,7 +96,16 @@ const generateCode = () => {
 
 router.post('/creategroup', async (req, res) => {
   const groupId = generateCode();
-  const group = new Group({ name: req.body.name, code: groupId, users: [req.user.googleid] });
+  const group = new Group({
+    name: req.body.name,
+    code: groupId,
+    users: [req.user.googleid],
+    heads: [],
+    tops: [],
+    bottoms: [],
+    shoes: [],
+    outfits: [],
+  });
   await group.save();
   res.json({ groupId });
 });
@@ -291,11 +300,11 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
     console.log("Image processed successfully:", outputPath);
 
     try {
-      const s3Url = await uploadItem(outputPath, clothingType, `image_${req.user.googleid}_${req.user.closetSize}.png`);
+      const s3Url = await uploadItem(outputPath, clothingType, `${req.user.googleid}_${clothingType}_${req.user.closetSize}.png`);
       console.log("Image uploaded to S3:", s3Url);
       await User.updateOne({ googleid: req.user.googleid }, {
-      $push: { [clothingType]: s3Url }
-    });
+        $push: { [clothingType]: s3Url }
+      });
     } catch (err) {
       console.error("Error uploading to S3:", err);
       if (err.stack) console.error(err.stack);

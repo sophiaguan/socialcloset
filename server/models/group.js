@@ -4,10 +4,12 @@ const mongoose = require("mongoose");
 const GroupSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true },
   code: { type: String, required: true, unique: true },
-  users: [{ 
-    type: String, // Changed from ObjectId to String
-    ref: 'user' // Still reference the User model
-  }],
+  users: [String],
+  heads: [String],
+  tops: [String],
+  bottoms: [String],
+  shoes: [String],
+  outfits: [(String, String, String, String, String)],
 });
 
 module.exports = mongoose.model("group", GroupSchema);

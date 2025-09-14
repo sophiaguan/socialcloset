@@ -7,7 +7,8 @@ const UserSchema = new mongoose.Schema({
   heads: [String],
   tops: [String],
   bottoms: [String],
-  outfits: Array,
+  shoes: [String],
+  outfits: [(String, String, String, String)],
 });
 
 // compile model from schema
