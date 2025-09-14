@@ -101,6 +101,73 @@ router.post('/creategroup', async (req, res) => {
   res.json({ groupId });
 });
 
+// Join group by code
+router.post('/joingroup', auth.ensureLoggedIn, async (req, res) => {
+  try {
+    const { code } = req.body;
+    
+    if (!code || typeof code !== 'string' || code.length !== 4) {
+      return res.status(400).json({ error: "Invalid group code. Must be exactly 4 characters." });
+    }
+
+    // Convert to uppercase and find group
+    const groupCode = code.toUpperCase();
+    const group = await Group.findOne({ code: groupCode });
+    
+    if (!group) {
+      return res.status(404).json({ error: "Group not found with this code." });
+    }
+
+    // Check if user is already in the group
+    if (group.users.includes(req.user.googleid)) {
+      return res.status(400).json({ error: "You are already a member of this group." });
+    }
+
+    // Add user to the group
+    group.users.push(req.user.googleid);
+    await group.save();
+
+    res.json({ 
+      success: true, 
+      message: "Successfully joined the group!",
+      groupName: group.name 
+    });
+
+  } catch (error) {
+    console.error("Error joining group:", error);
+    res.status(500).json({ error: "Failed to join group" });
+  }
+});
+
+// Get all groups that the user is part of
+router.get('/usergroups', auth.ensureLoggedIn, async (req, res) => {
+  try {
+    // Find all groups where the user is a member
+    const groups = await Group.find({ users: req.user.googleid });
+    
+    // For each group, get user details for all members
+    const groupsWithMembers = await Promise.all(
+      groups.map(async (group) => {
+        const memberUsers = await User.find({ googleid: { $in: group.users } });
+        return {
+          id: group._id,
+          name: group.name,
+          code: group.code,
+          members: memberUsers.map(user => ({
+            name: user.name,
+            googleid: user.googleid
+          }))
+        };
+      })
+    );
+
+    res.json({ groups: groupsWithMembers });
+  } catch (error) {
+    console.error("Error fetching user groups:", error);
+    res.status(500).json({ error: "Failed to fetch groups" });
+  }
+});
+
 // Upload all processed images in /temp to S3
 // router.post("/upload-to-s3", async (req, res) => {
 //   try {

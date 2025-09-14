@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import "../../utilities.css";
+import BackButton from "../BackButton";
 
 const ImageEdit = () => {
     const location = useLocation();
@@ -17,8 +18,8 @@ const ImageEdit = () => {
     }, [location.state]);
 
     const handleSubmit = async () => {
-        if (!imageData) {
-            alert("Please provide both an image and a name for the clothing item.");
+        if (!imageData || !imageName.trim()) {
+            alert("Please provide both an image.");
             return;
         }
 
@@ -77,13 +78,9 @@ const ImageEdit = () => {
 
     if (!imageData) {
         return (
-            <div>
-                <nav style={{ marginBottom: "20px" }}>
-                    <Link to="/my-closet" style={{ textDecoration: "none", color: "#007bff" }}>
-                        ← Back to My Closet
-                    </Link>
-                </nav>
-                <h1>No Image Selected</h1>
+            <div style={{ padding: "40px 60px" }}>
+                <BackButton destination="/my-closet" label="Back to My Closet" />
+                <h1 style={{ marginTop: "20px", marginBottom: "10px" }}>No Image Selected</h1>
                 <p>Please go back to My Closet and upload an image first.</p>
             </div>
         );
@@ -91,13 +88,9 @@ const ImageEdit = () => {
 
     return (
         <div style={{ padding: "40px 60px" }}>
-            <nav style={{ marginBottom: "15px" }}>
-                <Link to="/my-closet" style={{ textDecoration: "none", color: "#007bff" }}>
-                    ← Back to My Closet
-                </Link>
-            </nav>
+            <BackButton destination="/my-closet" label="Back to My Closet" />
 
-            <h1 style={{ marginBottom: "10px" }}>Upload Your Clothes</h1>
+            <h1 style={{ marginTop: "20px", marginBottom: "10px" }}>Upload Your Clothes</h1>
             <p style={{ marginBottom: "20px" }}>Add details about your clothing item.</p>
 
             <div style={{
@@ -127,6 +120,31 @@ const ImageEdit = () => {
                 <div style={{ flex: '1', minWidth: '300px' }}>
                     <h3>Clothing Details</h3>
 
+                    {/* <div style={{ marginBottom: '20px' }}>
+                        <label htmlFor="imageName" style={{
+                            display: 'block',
+                            marginBottom: '8px',
+                            fontWeight: 'bold'
+                        }}>
+                            Name:
+                        </label>
+                        <input
+                            id="imageName"
+                            type="text"
+                            value={imageName}
+                            onChange={(e) => setImageName(e.target.value)}
+                            placeholder="Enter a name for this clothing item"
+                            style={{
+                                width: '100%',
+                                padding: '12px',
+                                border: '1px solid #ddd',
+                                borderRadius: '6px',
+                                fontSize: '16px',
+                                boxSizing: 'border-box'
+                            }}
+                        />
+                    </div> */}
+
                     <div style={{ marginBottom: '30px' }}>
                         <label htmlFor="clothingType" style={{
                             display: 'block',
@@ -149,8 +167,10 @@ const ImageEdit = () => {
                                 boxSizing: 'border-box'
                             }}
                         >
-                            <option value="tops">Top</option>
-                            <option value="bottoms">Bottom</option>
+
+                            <option value="top">Top</option>
+                            <option value="bottom">Bottom</option>
+                            <option value="head">Head</option>
                         </select>
                     </div>
 
