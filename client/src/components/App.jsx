@@ -62,7 +62,7 @@ const App = () => {
   return (
     <UserContext.Provider value={authContextValue}>
       <NavBar />
-      <div style={{ marginTop: "60px" }}>
+      <div style={{ marginTop: "70px" }}>
         <Outlet />
       </div>
     </UserContext.Provider>
