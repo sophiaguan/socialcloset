@@ -215,6 +215,7 @@ router.post('/editgroupname', auth.ensureLoggedIn, async (req, res) => {
 // });
 
 // Upload clothing image and process it
+
 router.post("/upload-clothing", upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
@@ -247,7 +248,7 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
 
     // Call the Python script with the temp file (using conda Python)
     const pythonProcess = spawn('python', [
-      path.join(__dirname, '..', 'pixian.py'),
+      path.join(__dirname, '..', 'removebg.py'),
       tempFilePath,
       outputPath
     ]);
@@ -322,6 +323,32 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
       details: error.message,
       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
+  }
+});
+
+// Get all clothing image URLs for the logged-in user
+router.get("/clothing-images", auth.ensureLoggedIn, async (req, res) => {
+  try {
+    console.log("woaza");
+    const user = await User.findOne({ googleid: req.user.googleid });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    console.log("woazazzaa2")
+
+    // Collect clothing image URLs
+    const images = {
+      tops: user.tops || [],
+      bottoms: user.bottoms || [],
+      heads: user.heads || []
+    };
+    console.log(images)
+
+    res.json({ images });
+  } catch (error) {
+    console.error("Error retrieving clothing images:", error);
+    res.status(500).json({ error: "Failed to retrieve clothing images" });
   }
 });
 

@@ -1,44 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import "../../utilities.css";
-import BackButton from "../BackButton";
+
+
 
 const ImageEdit = () => {
     const location = useLocation();
-    const navigate = useNavigate();
     const [imageData, setImageData] = useState(null);
-    const [clothingType, setClothingType] = useState("tops");
-
-    // Scroll to top when component mounts
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
+    const [imageName, setImageName] = useState("");
+    const [clothingType, setClothingType] = useState("top");
 
     useEffect(() => {
         if (location.state?.imageData) {
             setImageData(location.state.imageData);
+            // Set default name based on original filename
             const defaultName = location.state.imageData.name.split('.')[0];
+            setImageName(defaultName);
         }
     }, [location.state]);
 
     const handleSubmit = async () => {
-        if (!imageData) {
-            alert("Please provide an image.");
+        if (!imageData || !imageName.trim()) {
+            alert("Please provide both an image and a name for the clothing item.");
             return;
         }
 
         try {
+            // Create FormData to send file and metadata
             const formData = new FormData();
-            if (!imageData.file) {
-                console.error("No file found in imageData:", imageData);
-                alert("No file to upload. Please re-upload the image.");
-                return;
-            }
             formData.append('image', imageData.file);
+            formData.append('imageName', imageName);
             formData.append('clothingType', clothingType);
 
             console.log("Submitting:", {
+                imageName,
                 clothingType,
                 fileName: imageData.file.name
             });
@@ -47,61 +43,62 @@ const ImageEdit = () => {
                 method: 'POST',
                 body: formData
             });
-            if (!response.ok) {
-                const errorText = await response.text();  // Read the raw error text
-                console.error("Server responded with error:", errorText);
-                alert(`Upload failed: ${errorText || 'Unknown error'}`);
-                return;
-            }
 
-            // const result = await response.json();
-
-            let result;
-            try {
-                result = await response.json();
-            } catch (jsonError) {
-                console.error("Error parsing JSON:", jsonError);
-                const errorText = await response.text();  // Fallback to getting raw text if JSON parsing fails
-                console.error("Raw response body:", errorText);
-                alert("Something went wrong with the response. Please try again.");
-                return;
-            }
+            const result = await response.json();
 
             if (response.ok) {
-                alert(`Success! Image processed and saved!`);
+                alert(`✅ Success! Image processed and saved as: ${result.processedImage}`);
                 console.log("Upload successful:", result);
-                navigate("/my-closet");
+                // Now call the S3 upload API
+                const uploadResponse = await fetch("/api/upload-to-s3", { method: "POST" });
+                const uploadResult = await uploadResponse.json();
+
+                if (uploadResponse.ok) {
+                alert("🎉 Uploaded to S3 successfully!");
+                console.log("S3 Upload result:", uploadResult);
+                } else {
+                alert(`❌ S3 Upload error: ${uploadResult.error}`);
+                }
+
             } else {
-                alert(`Error: ${result.error}`);
+                alert(`❌ Error: ${result.error}`);
                 console.error("Upload failed:", result);
             }
         } catch (error) {
             console.error("Error submitting:", error);
-            alert("Failed to submit. Please try again.");
+            alert("❌ Failed to submit. Please try again.");
         }
     };
 
     if (!imageData) {
         return (
-            <div style={{ padding: "40px 60px" }}>
-                <BackButton destination="/my-closet" label="Back to My Closet" />
-                <h1 style={{ marginTop: "20px", marginBottom: "10px" }}>No Image Selected</h1>
+            <div>
+                <nav style={{ marginBottom: "20px" }}>
+                    <Link to="/my-closet" style={{ textDecoration: "none", color: "#007bff" }}>
+                        ← Back to My Closet
+                    </Link>
+                </nav>
+                <h1>No Image Selected</h1>
                 <p>Please go back to My Closet and upload an image first.</p>
             </div>
         );
     }
 
     return (
-        <div style={{ padding: "40px 60px" }}>
-            <BackButton destination="/my-closet" label="Back to My Closet" />
+        <div>
+            <nav style={{ marginBottom: "20px" }}>
+                <Link to="/my-closet" style={{ textDecoration: "none", color: "#007bff" }}>
+                    ← Back to My Closet
+                </Link>
+            </nav>
 
-            <h1 style={{ marginTop: "20px", marginBottom: "10px" }}>Upload Your Clothes</h1>
-            <p style={{ marginBottom: "20px" }}>Add details about your clothing item.</p>
+            <h1>Edit Your Clothes</h1>
+            <p>Add details about your clothing item.</p>
 
             <div style={{
                 display: 'flex',
                 gap: '40px',
-                marginTop: '20px',
+                marginTop: '30px',
                 flexWrap: 'wrap'
             }}>
                 {/* Image Preview */}
@@ -125,7 +122,7 @@ const ImageEdit = () => {
                 <div style={{ flex: '1', minWidth: '300px' }}>
                     <h3>Clothing Details</h3>
 
-                    {/* <div style={{ marginBottom: '20px' }}>
+                    <div style={{ marginBottom: '20px' }}>
                         <label htmlFor="imageName" style={{
                             display: 'block',
                             marginBottom: '8px',
@@ -148,7 +145,7 @@ const ImageEdit = () => {
                                 boxSizing: 'border-box'
                             }}
                         />
-                    </div> */}
+                    </div>
 
                     <div style={{ marginBottom: '30px' }}>
                         <label htmlFor="clothingType" style={{
@@ -172,10 +169,8 @@ const ImageEdit = () => {
                                 boxSizing: 'border-box'
                             }}
                         >
-
-                            <option value="tops">Top</option>
-                            <option value="bottoms">Bottom</option>
-                            <option value="head">Head</option>
+                            <option value="top">Top</option>
+                            <option value="bottom">Bottom</option>
                         </select>
                     </div>
 
