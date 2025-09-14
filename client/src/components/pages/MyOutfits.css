@@ -1,0 +1,357 @@
+/* Import Google Fonts (same as other pages) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+/* MyOutfits Page Custom Styling */
+.my-outfits-container {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: calc(100vh - 70px);
+    padding: 60px 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.my-outfits-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Page Header */
+.outfits-header {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.outfits-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 15px;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.outfits-subtitle {
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: #4a5568;
+    margin-bottom: 0;
+    line-height: 1.5;
+}
+
+/* Outfit Combination Section */
+.outfit-combination-section {
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    padding: 40px;
+    margin-bottom: 40px;
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.combination-instructions {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.combination-instructions h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+}
+
+.combination-instructions p {
+    font-size: 1.1rem;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Outfit Images Stack */
+.outfit-images-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+    gap: 0;
+    /* No gap between images */
+}
+
+.image-with-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.outfit-image {
+    max-width: 300px;
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.outfit-image:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.carousel-nav-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 15px;
+}
+
+.carousel-nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.carousel-nav-btn:active {
+    transform: translateY(0);
+}
+
+
+/* Action Buttons */
+.outfit-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.save-outfit-btn,
+.random-outfit-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.random-outfit-btn {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
+}
+
+.save-outfit-btn::before,
+.random-outfit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.6s;
+}
+
+.save-outfit-btn:hover::before,
+.random-outfit-btn:hover::before {
+    left: 100%;
+}
+
+.save-outfit-btn:hover,
+.random-outfit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.random-outfit-btn:hover {
+    box-shadow: 0 6px 20px rgba(240, 147, 251, 0.4);
+}
+
+.save-outfit-btn:active,
+.random-outfit-btn:active {
+    transform: translateY(0);
+}
+
+/* Saved Outfits Section */
+.saved-outfits-section {
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    padding: 40px;
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.saved-outfits-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+    text-align: center;
+}
+
+.no-outfits-message {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.no-outfits-message p {
+    font-size: 1.1rem;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .my-outfits-container {
+        padding: 50px 60px;
+    }
+
+    .outfits-title {
+        font-size: 3rem;
+    }
+
+    .outfit-combination-section,
+    .saved-outfits-section {
+        padding: 30px;
+    }
+
+    .outfit-images-stack {
+        gap: 0;
+    }
+
+    .outfit-image {
+        max-width: 250px;
+        max-height: 350px;
+    }
+}
+
+@media (max-width: 768px) {
+    .my-outfits-container {
+        padding: 40px 40px;
+    }
+
+    .outfits-title {
+        font-size: 2.5rem;
+    }
+
+    .outfits-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .outfit-combination-section,
+    .saved-outfits-section {
+        padding: 25px;
+    }
+
+    .combination-instructions h2 {
+        font-size: 1.7rem;
+    }
+
+    .outfit-image {
+        max-width: 200px;
+        max-height: 300px;
+    }
+
+    .carousel-nav-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+        margin: 0 10px;
+    }
+
+    .outfit-actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .save-outfit-btn,
+    .random-outfit-btn {
+        width: 200px;
+        padding: 12px 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .my-outfits-container {
+        padding: 30px 20px;
+    }
+
+    .outfits-title {
+        font-size: 2rem;
+    }
+
+    .outfits-subtitle {
+        font-size: 1rem;
+    }
+
+    .outfit-combination-section,
+    .saved-outfits-section {
+        padding: 20px;
+    }
+
+    .combination-instructions h2 {
+        font-size: 1.5rem;
+    }
+
+    .outfit-image {
+        max-width: 180px;
+        max-height: 250px;
+    }
+
+    .carousel-nav-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+        margin: 0 8px;
+    }
+
+    .save-outfit-btn,
+    .random-outfit-btn {
+        width: 180px;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
