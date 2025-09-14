@@ -27,6 +27,7 @@ const router = express.Router();
 
 //initialize socket
 const socketManager = require("./server-socket");
+const { timeStamp } = require("console");
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -237,16 +238,16 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
     const { clothingType } = req.body;
     const tempFilePath = req.file.path;
 
-    const closetSize = await User.updateOne(
-      { googleid: req.user.googleid },
-      { $inc: { closetSize: 1 } }
-    );
-    console.log(req.user.closetSize)
+    // const closetSize = await User.updateOne(
+    //   { googleid: req.user.googleid },
+    //   { $inc: { closetSize: 1 } }
+    // );
+    // console.log(req.user.closetSize)
 
-
-    // Generate filename
-    const tempDir = 'temp/';
-    const outputPath = `${tempDir}image_${req.user.googleid}_${closetSize}.png`;
+    // Generate filename with timestamp
+    const tempDir = "temp/";
+    const timestamp = Date.now();
+    const outputPath = `${tempDir}image_${req.user.googleid}_${timestamp}.png`;
     // ^ will need to change if we implement delete clohtes function
 
     console.log("Processing image:", tempFilePath);
@@ -261,7 +262,7 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
 
     // Call the Python script with the temp file (using conda Python)
     const pythonProcess = spawn('python', [
-      path.join(__dirname, '..', 'pixian.py'),
+      path.join(__dirname, '..', 'removebg.py'),
       tempFilePath,
       outputPath
     ]);
@@ -304,7 +305,7 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
     console.log("Image processed successfully:", outputPath);
 
     try {
-      const s3Url = await uploadItem(outputPath, clothingType, `${req.user.googleid}_${clothingType}_${req.user.closetSize}.png`);
+      const s3Url = await uploadItem(outputPath, clothingType, `${req.user.googleid}_${clothingType}_${timestamp}.png`);
       console.log("Image uploaded to S3:", s3Url);
       await User.updateOne({ googleid: req.user.googleid }, {
         $push: { [clothingType]: s3Url }
@@ -354,7 +355,8 @@ router.get("/clothing-images", auth.ensureLoggedIn, async (req, res) => {
     const images = {
       tops: user.tops || [],
       bottoms: user.bottoms || [],
-      heads: user.heads || []
+      heads: user.heads || [],
+      shoes: user.shoes || []
     };
     console.log(images)
 
