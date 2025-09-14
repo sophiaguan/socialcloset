@@ -1,0 +1,321 @@
+/* Import Google Fonts (same as other pages) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+/* UploadClothes Page Custom Styling */
+.upload-clothes-container {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: calc(100vh - 70px);
+    padding: 60px 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-clothes-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Page Header */
+.upload-clothes-header {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 50px;
+}
+
+.upload-clothes-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 15px;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.upload-clothes-subtitle {
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: #4a5568;
+    margin-bottom: 0;
+    line-height: 1.5;
+}
+
+/* Main Content */
+.upload-clothes-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 40px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+/* Image Preview Section */
+.image-preview-section {
+    flex: 0 0 350px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    padding: 30px;
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.image-preview-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+    text-align: center;
+}
+
+.image-preview-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    overflow: hidden;
+}
+
+.image-preview {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Section */
+.form-section {
+    flex: 1;
+    min-width: 350px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    padding: 30px;
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.form-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 30px;
+    letter-spacing: -0.01em;
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 1rem;
+}
+
+.form-select {
+    width: 100%;
+    padding: 15px 20px;
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    border-radius: 15px;
+    font-size: 1rem;
+    color: #2d3748;
+    background: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.form-select:hover {
+    border-color: rgba(102, 126, 234, 0.5);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Submit Button */
+.submit-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.submit-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.6s;
+}
+
+.submit-button:hover::before {
+    left: 100%;
+}
+
+.submit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.submit-button:active {
+    transform: translateY(0);
+}
+
+/* No Image State */
+.no-image-container {
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    padding: 60px 40px;
+    text-align: center;
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.no-image-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+}
+
+.no-image-message {
+    font-size: 1.2rem;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .upload-clothes-container {
+        padding: 50px 60px;
+    }
+
+    .upload-clothes-title {
+        font-size: 3rem;
+    }
+
+    .upload-clothes-content {
+        gap: 30px;
+    }
+
+    .image-preview-section {
+        flex: 0 0 300px;
+    }
+
+    .form-section {
+        min-width: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .upload-clothes-container {
+        padding: 40px 40px;
+    }
+
+    .upload-clothes-title {
+        font-size: 2.5rem;
+    }
+
+    .upload-clothes-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .upload-clothes-content {
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .image-preview-section {
+        flex: none;
+    }
+
+    .form-section {
+        min-width: auto;
+    }
+
+    .image-preview-container {
+        height: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .upload-clothes-container {
+        padding: 30px 20px;
+    }
+
+    .upload-clothes-title {
+        font-size: 2rem;
+    }
+
+    .upload-clothes-subtitle {
+        font-size: 1rem;
+    }
+
+    .image-preview-section,
+    .form-section {
+        padding: 20px;
+    }
+
+    .image-preview-container {
+        height: 200px;
+    }
+
+    .form-select {
+        padding: 12px 15px;
+        font-size: 0.95rem;
+    }
+
+    .submit-button {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+}
