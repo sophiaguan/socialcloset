@@ -3,6 +3,16 @@ import "./MyOutfits.css";
 
 const MyOutfits = () => {
     // Hardcoded clothing data for outfit combinations
+    const hatsData = [
+        "https://cdn.discordapp.com/attachments/1416507297726730310/1416546251603710063/image4.png?ex=68c73d00&is=68c5eb80&hm=163f059dd7afd26873f38f9c279395b5b0bc71719e7551ca7ebb550039ae9405",
+        "https://cdn.discordapp.com/attachments/1416507297726730310/1416546220025053395/image5.png?ex=68c73cf9&is=68c5eb79&hm=b2c33e777793ede8d0f09f12b090f112ca5d8d0a21780069b30cfc682074f432",
+        "https://cdn.discordapp.com/attachments/1416507297726730310/1416547830813950113/image6.png?ex=68c73e79&is=68c5ecf9&hm=fc98e3fddb68739158cb31f5d94a4784995e1cbd0ac0311b826c7654e72c7faa",
+        "https://cdn.discordapp.com/attachments/1416507297726730310/1416622970872533173/image21.png?ex=68c78473&is=68c632f3&hm=6628a55925e3367bd7d53056e1e607b733f927048c5fcb7ba71ec4d721f05e7f",
+        "https://cdn.discordapp.com/attachments/1416507297726730310/1416622998928097321/image20.png?ex=68c7847a&is=68c632fa&hm=83d57dd6ae5a18218e80bb222fd1befac105f446cc812ce1190fb870c35fd619",
+        "https://cdn.discordapp.com/attachments/1416507297726730310/1416623024995700836/image19.png?ex=68c78480&is=68c63300&hm=bd0aac72fc970b4ffe720b978474e136cd0b5d900cb6b516ba3f6be23668c712",
+        "https://cdn.discordapp.com/attachments/1416507297726730310/1416623052422250626/image18.png?ex=68c78487&is=68c63307&hm=fd0f2d5a1fa8bd7a960131a9025184795aa70f8ae9b175191bb3665b119fec71"
+    ];
+
     const topsData = [
         "https://cdn.discordapp.com/attachments/1416507297726730310/1416546251603710063/image4.png?ex=68c73d00&is=68c5eb80&hm=163f059dd7afd26873f38f9c279395b5b0bc71719e7551ca7ebb550039ae9405",
         "https://cdn.discordapp.com/attachments/1416507297726730310/1416546220025053395/image5.png?ex=68c73cf9&is=68c5eb79&hm=b2c33e777793ede8d0f09f12b090f112ca5d8d0a21780069b30cfc682074f432",
@@ -25,6 +35,7 @@ const MyOutfits = () => {
     ];
 
     // State for carousel navigation
+    const [currentHatIndex, setCurrentHatIndex] = useState(0);
     const [currentTopIndex, setCurrentTopIndex] = useState(0);
     const [currentBottomIndex, setCurrentBottomIndex] = useState(0);
 
@@ -36,6 +47,14 @@ const MyOutfits = () => {
     }, []);
 
     // Carousel navigation functions
+    const nextHat = () => {
+        setCurrentHatIndex((prev) => (prev + 1) % hatsData.length);
+    };
+
+    const prevHat = () => {
+        setCurrentHatIndex((prev) => (prev - 1 + hatsData.length) % hatsData.length);
+    };
+
     const nextTop = () => {
         setCurrentTopIndex((prev) => (prev + 1) % topsData.length);
     };
@@ -53,8 +72,10 @@ const MyOutfits = () => {
     };
 
     const randomOutfit = () => {
+        const randomHatIndex = Math.floor(Math.random() * hatsData.length);
         const randomTopIndex = Math.floor(Math.random() * topsData.length);
         const randomBottomIndex = Math.floor(Math.random() * bottomsData.length);
+        setCurrentHatIndex(randomHatIndex);
         setCurrentTopIndex(randomTopIndex);
         setCurrentBottomIndex(randomBottomIndex);
     };
@@ -62,7 +83,7 @@ const MyOutfits = () => {
     const saveOutfit = () => {
         // Check if this combination already exists
         const outfitExists = savedOutfits.some(outfit =>
-            outfit.topIndex === currentTopIndex && outfit.bottomIndex === currentBottomIndex
+            outfit.hatIndex === currentHatIndex && outfit.topIndex === currentTopIndex && outfit.bottomIndex === currentBottomIndex
         );
 
         if (outfitExists) {
@@ -72,8 +93,10 @@ const MyOutfits = () => {
 
         const newOutfit = {
             id: Date.now(), // Simple unique ID
+            hatImage: hatsData[currentHatIndex],
             topImage: topsData[currentTopIndex],
             bottomImage: bottomsData[currentBottomIndex],
+            hatIndex: currentHatIndex,
             topIndex: currentTopIndex,
             bottomIndex: currentBottomIndex
         };
@@ -102,6 +125,21 @@ const MyOutfits = () => {
                     </div>
 
                     <div className="outfit-images-stack">
+                        {/* Hats Image */}
+                        <div className="image-with-controls">
+                            <button className="carousel-nav-btn prev-btn" onClick={prevHat}>
+                                ←
+                            </button>
+                            <img
+                                src={hatsData[currentHatIndex]}
+                                alt={`Hat ${currentHatIndex + 1}`}
+                                className="outfit-image"
+                            />
+                            <button className="carousel-nav-btn next-btn" onClick={nextHat}>
+                                →
+                            </button>
+                        </div>
+
                         {/* Tops Image */}
                         <div className="image-with-controls">
                             <button className="carousel-nav-btn prev-btn" onClick={prevTop}>
@@ -155,6 +193,11 @@ const MyOutfits = () => {
                                 {savedOutfits.map((outfit) => (
                                     <div key={outfit.id} className="saved-outfit-item">
                                         <div className="outfit-images">
+                                            <img
+                                                src={outfit.hatImage}
+                                                alt="Saved hat"
+                                                className="saved-outfit-image"
+                                            />
                                             <img
                                                 src={outfit.topImage}
                                                 alt="Saved top"

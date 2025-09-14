@@ -7,7 +7,8 @@ import "./MyGroups.css";
 const GroupCloset = () => {
     const navigate = useNavigate();
     const [groupCode, setGroupCode] = useState("");
-    const [message, setMessage] = useState("");
+    const [createMessage, setCreateMessage] = useState("");
+    const [joinMessage, setJoinMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isCreatingGroup, setIsCreatingGroup] = useState(false);
     const [createdGroupCode, setCreatedGroupCode] = useState("");
@@ -88,7 +89,7 @@ const GroupCloset = () => {
                 );
                 setEditingGroupId(null);
                 setEditingGroupName("");
-                setMessage("Group name updated successfully!");
+                setCreateMessage("Group name updated successfully!");
             } else {
                 alert(data.error || "Failed to update group name");
             }
@@ -100,12 +101,12 @@ const GroupCloset = () => {
 
     const handleJoinGroup = async () => {
         if (!groupCode || groupCode.length !== 4) {
-            setMessage("Please enter a valid 4-letter group code.");
+            setJoinMessage("Please enter a valid 4-letter group code.");
             return;
         }
 
         setIsLoading(true);
-        setMessage("");
+        setJoinMessage("");
 
         try {
             const response = await fetch("/api/joingroup", {
@@ -119,16 +120,16 @@ const GroupCloset = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setMessage(`Successfully joined group "${data.groupName}"!`);
+                setJoinMessage(`Successfully joined group "${data.groupName}"!`);
                 setGroupCode("");
                 // Refresh the groups list
                 fetchUserGroups();
             } else {
-                setMessage(data.error || "Failed to join group.");
+                setJoinMessage(data.error || "Failed to join group.");
             }
         } catch (error) {
             console.error("Error joining group:", error);
-            setMessage("Failed to join group. Please try again.");
+            setJoinMessage("Failed to join group. Please try again.");
         } finally {
             setIsLoading(false);
         }
@@ -136,7 +137,11 @@ const GroupCloset = () => {
 
     const handleCreateGroup = async () => {
         setIsCreatingGroup(true);
-        setMessage("");
+        setCreateMessage("");
+
+        // Generate group name based on existing groups count
+        const groupNumber = userGroups.length + 1;
+        const groupName = `Untitled Group ${groupNumber}`;
 
         try {
             const response = await fetch("/api/creategroup", {
@@ -144,22 +149,22 @@ const GroupCloset = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ name: "My Group" }),
+                body: JSON.stringify({ name: groupName }),
             });
 
             const data = await response.json();
 
             if (response.ok) {
                 setCreatedGroupCode(data.groupId);
-                setMessage(`Group created successfully! Share this code with your friends: ${data.groupId}`);
+                setCreateMessage(`Group created successfully! Share this code with your friends: ${data.groupId}`);
                 // Refresh the groups list
                 fetchUserGroups();
             } else {
-                setMessage(data.error || "Failed to create group.");
+                alert(data.error || "Failed to create group.");
             }
         } catch (error) {
             console.error("Error creating group:", error);
-            setMessage("Failed to create group. Please try again.");
+            alert("Failed to create group. Please try again.");
         } finally {
             setIsCreatingGroup(false);
         }
@@ -185,21 +190,9 @@ const GroupCloset = () => {
                         </button>
                     </div>
 
-                    {createdGroupCode && (
+                    {createMessage && (
                         <div className="create-group-success">
-                            <h3 style={{ marginBottom: "10px", color: "#059669" }}>Your Group Code</h3>
-                            <div style={{
-                                fontSize: "24px",
-                                fontWeight: "bold",
-                                color: "#667eea",
-                                letterSpacing: "2px",
-                                marginBottom: "10px"
-                            }}>
-                                {createdGroupCode}
-                            </div>
-                            <p style={{ fontSize: "14px", color: "#6b7280", margin: "0" }}>
-                                Share this code with your friends so they can join your group!
-                            </p>
+                            {createMessage}
                         </div>
                     )}
                 </div>
@@ -229,9 +222,9 @@ const GroupCloset = () => {
                             {isLoading ? "Joining..." : "Join Group"}
                         </button>
                     </div>
-                    {message && (
-                        <div className="join-group-message">
-                            {message}
+                    {joinMessage && (
+                        <div className={`join-group-message ${joinMessage.includes('Successfully joined') ? 'success' : 'error'}`}>
+                            {joinMessage}
                         </div>
                     )}
                 </div>

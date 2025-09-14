@@ -49,6 +49,33 @@
     line-height: 1.5;
 }
 
+/* Group Title Row */
+.group-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 0;
+}
+
+.group-title-section {
+    flex: 1;
+}
+
+.group-detail-title {
+    margin-bottom: 15px;
+}
+
+.group-detail-subtitle {
+    margin-bottom: 0;
+}
+
+.member-icons-right {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
 /* Action Buttons */
 .group-detail-actions {
     position: relative;
@@ -241,5 +268,121 @@
 
     .action-content p {
         font-size: 0.85rem;
+    }
+}
+
+/* Member Icons */
+
+.member-icon-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.member-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.member-icon:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.member-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    pointer-events: none;
+    margin-bottom: 8px;
+}
+
+.member-tooltip::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+.member-icon-container:hover .member-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Responsive Design for Right-Aligned Member Icons */
+@media (max-width: 1024px) {
+    .group-title-row {
+        gap: 20px;
+    }
+
+    .member-icons-right {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .group-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .member-icons-right {
+        align-self: flex-end;
+        gap: 8px;
+    }
+
+    .member-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .group-title-row {
+        gap: 12px;
+    }
+
+    .member-icons-right {
+        gap: 6px;
+    }
+
+    .member-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+    }
+
+    .member-tooltip {
+        font-size: 0.8rem;
+        padding: 6px 10px;
     }
 }

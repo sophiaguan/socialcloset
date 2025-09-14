@@ -228,13 +228,22 @@
 }
 
 .join-group-message {
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.2);
     border-radius: 15px;
     padding: 15px 20px;
     margin-top: 20px;
-    color: #dc2626;
     font-weight: 500;
+}
+
+.join-group-message.success {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    color: #059669;
+}
+
+.join-group-message.error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #dc2626;
 }
 
 /* User Groups Section */

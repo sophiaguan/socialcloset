@@ -9,6 +9,7 @@ const GroupDetail = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [groupCode, setGroupCode] = useState("");
+    const [groupMembers, setGroupMembers] = useState([]);
 
     // Scroll to top when component mounts
     useEffect(() => {
@@ -18,7 +19,7 @@ const GroupDetail = () => {
     // Decode the group name from URL
     const decodedGroupName = decodeURIComponent(groupName || "Group");
 
-    // Get group code from navigation state or fetch it
+    // Get group code and members from navigation state or fetch it
     React.useEffect(() => {
         // First try to get group code from navigation state
         if (location.state?.groupCode) {
@@ -26,8 +27,8 @@ const GroupDetail = () => {
             return;
         }
 
-        // Fallback: fetch group code from API
-        const fetchGroupCode = async () => {
+        // Fallback: fetch group code and members from API
+        const fetchGroupData = async () => {
             try {
                 const response = await fetch("/api/usergroups");
                 const data = await response.json();
@@ -39,23 +40,66 @@ const GroupDetail = () => {
 
                     if (matchingGroup) {
                         setGroupCode(matchingGroup.code);
+                        setGroupMembers(matchingGroup.members || []);
                     }
                 }
             } catch (error) {
-                console.error("Error fetching group code:", error);
+                console.error("Error fetching group data:", error);
             }
         };
 
-        fetchGroupCode();
+        fetchGroupData();
     }, [decodedGroupName, location.state]);
+
+    // Fetch members when group code changes
+    React.useEffect(() => {
+        if (groupCode) {
+            const fetchMembers = async () => {
+                try {
+                    const response = await fetch("/api/usergroups");
+                    const data = await response.json();
+
+                    if (response.ok && data.groups) {
+                        const matchingGroup = data.groups.find(group =>
+                            group.code === groupCode
+                        );
+
+                        if (matchingGroup) {
+                            setGroupMembers(matchingGroup.members || []);
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error fetching group members:", error);
+                }
+            };
+
+            fetchMembers();
+        }
+    }, [groupCode]);
 
     return (
         <div className="group-detail-container">
             <div className="group-detail-header">
                 <BackButton destination="/friends" label="Back to Group Closet" />
 
-                <h1 className="group-detail-title">{decodedGroupName}</h1>
-                <p className="group-detail-subtitle">Manage your group's shared closet and outfits.</p>
+                <div className="group-title-row">
+                    <div className="group-title-section">
+                        <h1 className="group-detail-title">{decodedGroupName}</h1>
+                        <p className="group-detail-subtitle">Manage your group's shared closet and outfits.</p>
+                    </div>
+                    <div className="member-icons-right">
+                        {groupMembers.map((member, index) => (
+                            <div key={member.googleid} className="member-icon-container">
+                                <div className="member-icon">
+                                    {member.name ? member.name.charAt(0).toUpperCase() : '?'}
+                                </div>
+                                <div className="member-tooltip">
+                                    {member.name || 'Unknown User'}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
 
             {/* Action Buttons */}
@@ -78,7 +122,7 @@ const GroupDetail = () => {
                     <div className="action-icon">👗</div>
                     <div className="action-content">
                         <h3>Make Outfits</h3>
-                        <p>Create and share outfit combinations with the group</p>
+                        <p>Create outfit combinations from your group closet</p>
                     </div>
                 </button>
 
