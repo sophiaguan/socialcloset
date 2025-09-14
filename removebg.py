@@ -65,33 +65,38 @@ def remove_transparent_pixels(image_path, output_path):
         print("Image is fully transparent!")
         return False
 
-def extend_to_4_3(image_path, output_path):
+from PIL import Image
+
+def extend_to_3_4(image_path, output_path):
     """
-    Extend image to 4:3 aspect ratio with transparent background
+    Extend image to 3:4 aspect ratio with transparent background
+    (portrait orientation: 3 wide, 4 tall)
     """
     img = Image.open(image_path).convert("RGBA")
     width, height = img.size
 
-    target_width = width
-    target_height = int(width * 3 / 4)
+    # Assume height stays the same, compute width for 3:4
+    target_height = height
+    target_width = int(height * 3 / 4)
 
-    # Adjust if height is bigger than the 4:3 height
-    if target_height < height:
-        target_height = height
-        target_width = int(height * 4 / 3)
+    # If width is bigger than target, fix width and adjust height
+    if target_width < width:
+        target_width = width
+        target_height = int(width * 4 / 3)
 
-    # Create a transparent background image
+    # Transparent background canvas
     new_img = Image.new("RGBA", (target_width, target_height), (0, 0, 0, 0))
 
-    # Paste original image centered
+    # Center the original image
     x_offset = (target_width - width) // 2
     y_offset = (target_height - height) // 2
     new_img.paste(img, (x_offset, y_offset), img)
 
     new_img.save(output_path)
-    print(f"Extended to 4:3! Saved to: {output_path}")
+    print(f"Extended to 3:4! Saved to: {output_path}")
 
     return True
+
 
 if __name__ == "__main__":
     # Check command line arguments
@@ -109,7 +114,7 @@ if __name__ == "__main__":
             remove_transparent_pixels(output_path, output_path)
 
             # Step 3: Extend to 4:3 aspect ratio
-            extend_to_4_3(output_path, output_path)
+            extend_to_3_4(output_path, output_path)
 
             print("Done!")
             sys.exit(0)
@@ -128,7 +133,7 @@ if __name__ == "__main__":
             bg_removed = remove_background_removebg(test_image, output_image, API_KEY)
             if bg_removed:
                 remove_transparent_pixels(output_image, output_image)
-                extend_to_4_3(output_image, output_image)
+                extend_to_3_4(output_image, output_image)
                 print("Done!")
             else:
                 print("Failed to remove background")

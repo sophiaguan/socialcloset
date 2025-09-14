@@ -305,7 +305,7 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
     console.log("Image processed successfully:", outputPath);
 
     try {
-      const s3Url = await uploadItem(outputPath, clothingType, `${req.user.googleid}_${clothingType}_${timestamp}.png`);
+      const s3Url = await uploadItem(outputPath, clothingType, `$image_${req.user.googleid}_${timestamp}.png`);
       console.log("Image uploaded to S3:", s3Url);
       await User.updateOne({ googleid: req.user.googleid }, {
         $push: { [clothingType]: s3Url }
