@@ -64,22 +64,22 @@ router.post("/initsocket", (req, res) => {
 });
 
 // Get user's clothing items
-router.get("/user-clothes", auth.ensureLoggedIn, async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
+// router.get("/user-clothes", auth.ensureLoggedIn, async (req, res) => {
+//   try {
+//     const user = await User.findById(req.user._id);
+//     if (!user) {
+//       return res.status(404).json({ error: "User not found" });
+//     }
 
-    // Combine tops and bottoms into a single array
-    const allClothes = [...(user.tops || []), ...(user.bottoms || []), ...(user.heads || [])];
+//     // Combine tops and bottoms into a single array
+//     const allClothes = [...(user.tops || []), ...(user.bottoms || []), ...(user.heads || [])];
 
-    res.json({ clothes: allClothes });
-  } catch (error) {
-    console.error("Error fetching user clothes:", error);
-    res.status(500).json({ error: "Failed to fetch user clothes" });
-  }
-});
+//     res.json({ clothes: allClothes });
+//   } catch (error) {
+//     console.error("Error fetching user clothes:", error);
+//     res.status(500).json({ error: "Failed to fetch user clothes" });
+//   }
+// });
 
 // |------------------------------|
 // | write your API methods below!|
@@ -236,13 +236,18 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
 
     const { clothingType } = req.body;
     const tempFilePath = req.file.path;
-    await User.updateOne({ googleid: req.user.googleid }, {
-      $set: {closetSize: req.user.closetSize + 1}
-    });
+
+    await User.updateOne(
+      { googleid: req.user.googleid },
+      { $inc: { closetSize: 1 } }
+    );
+    console.log(req.user.closetSize)
+
+    const closetSize1 = await req.user.closetSize
 
     // Generate filename
     const tempDir = 'temp/';
-    const outputPath = `${tempDir}image_${req.user.googleid}_${req.user.closetSize}.png`;
+    const outputPath = `${tempDir}image_${req.user.googleid}_${closetSize1}.png`;
     // ^ will need to change if we implement delete clohtes function
 
     console.log("Processing image:", tempFilePath);
@@ -354,7 +359,7 @@ router.get("/clothing-images", auth.ensureLoggedIn, async (req, res) => {
     };
     console.log(images)
 
-    res.json({ images });
+    res.json( images );
   } catch (error) {
     console.error("Error retrieving clothing images:", error);
     res.status(500).json({ error: "Failed to retrieve clothing images" });

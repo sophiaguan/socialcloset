@@ -21,7 +21,9 @@ import ImageCarousel from "../ImageCarousel";
       const fetchClothes = async () => {
         try {
           const res = await fetch("/api/clothing-images");
+          console.log("connie connie")
           const data = await res.json();
+          console.log(data)
           setClothingData(data);
         } catch (err) {
           console.error("Failed to fetch clothing images", err);
@@ -67,6 +69,7 @@ import ImageCarousel from "../ImageCarousel";
 
         event.target.value = '';
     };
+    console.log("CONNIEdjkfsdj", clothingData)
 
     return (
         <div className="my-closet-container">

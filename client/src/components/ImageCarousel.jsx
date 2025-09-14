@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./ImageCarousel.css";
 
-const ImageCarousel = ({ images, title, type }) => {
+
+const ImageCarousel = ({ images = [], title, type }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const itemsPerView = 3; // Show 3 images at a time
     const maxIndex = Math.max(0, images.length - itemsPerView);
