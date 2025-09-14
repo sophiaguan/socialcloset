@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../../utilities.css";
 import "./AllClothes.css";
 import BackButton from "../BackButton";
 
 const AllClothes = () => {
+    // Scroll to top when component mounts
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     // Hardcoded clothing data (same as MyCloset for now)
     const clothingData = {
         "tops": [
@@ -24,13 +28,15 @@ const AllClothes = () => {
             "https://cdn.discordapp.com/attachments/1416507297726730310/1416621875697680465/Screenshot_2025-09-13_at_11.06.38_PM.png?ex=68c7836e&is=68c631ee&hm=75ad61f05006bd7da3f3a89a43256751af0a44ed87c8f3040a7983355e0a9b6c&",
             "https://cdn.discordapp.com/attachments/1416507297726730310/1416622631968440370/image16.png?ex=68c78423&is=68c632a3&hm=ef48cd7142f04d84ccc1c9259d79432778d1e2df06d5090c92b159c72e3344f9",
             "https://cdn.discordapp.com/attachments/1416507297726730310/1416622688151011328/image15.png?ex=68c78430&is=68c632b0&hm=0fd41ef6795fa2bbb5bd47154210be8d182ab9a002151ba5b38aa2918448b9c8"
-        ]
+        ],
+        "heads": ["https://cdn.discordapp.com/attachments/1416507297726730310/1416631614393417851/image16.png?ex=68c78c80&is=68c63b00&hm=797dc4f180105e567718a6bc22545150f6b22aaf892a81568bed01ff82f54592"]
     };
 
     // Combine all clothes into a single array for grid display
     const allClothes = [
         ...clothingData.tops.map((url, index) => ({ url, type: "top", id: `top-${index}` })),
-        ...clothingData.bottoms.map((url, index) => ({ url, type: "bottom", id: `bottom-${index}` }))
+        ...clothingData.bottoms.map((url, index) => ({ url, type: "bottom", id: `bottom-${index}` })),
+        ...clothingData.heads.map((url, index) => ({ url, type: "head", id: `head-${index}` }))
     ];
 
     return (

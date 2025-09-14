@@ -1,0 +1,412 @@
+/* Import Google Fonts (same as other pages) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+/* ShareClothes Page Custom Styling */
+.share-clothes-container {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: calc(100vh - 70px);
+    padding: 60px 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.share-clothes-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Page Header */
+.share-clothes-header {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 50px;
+}
+
+.share-clothes-title-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 30px;
+}
+
+.share-clothes-title-content {
+    flex: 1;
+}
+
+.share-clothes-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 15px;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.share-clothes-subtitle {
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: #4a5568;
+    margin-bottom: 0;
+    line-height: 1.5;
+}
+
+/* Shopping Cart Actions */
+.share-clothes-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 15px;
+    min-width: 200px;
+}
+
+.closet-icon-container {
+    position: relative;
+    display: inline-block;
+}
+
+.closet-icon-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    position: relative;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.closet-icon-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.closet-icon-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+}
+
+.closet-icon {
+    font-size: 24px;
+    color: white;
+}
+
+.item-count-popup {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ef4444;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    animation: popupAppear 0.3s ease-out;
+}
+
+@keyframes popupAppear {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Gallery Grid */
+.share-clothes-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    margin: 50px 0;
+    position: relative;
+    z-index: 1;
+}
+
+/* Individual Gallery Card */
+.share-clothes-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.share-clothes-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.6s;
+}
+
+.share-clothes-card:hover::before {
+    left: 100%;
+}
+
+.share-clothes-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Selected State */
+.share-clothes-card.selected {
+    border: 2px solid #667eea;
+    box-shadow:
+        0 15px 40px rgba(102, 126, 234, 0.2),
+        0 0 0 1px rgba(102, 126, 234, 0.3);
+    transform: translateY(-4px) scale(1.01);
+}
+
+.share-clothes-card.selected::before {
+    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.2), transparent);
+}
+
+/* Already Shared State */
+.share-clothes-card.already-shared {
+    opacity: 0.6;
+    cursor: not-allowed;
+    border: 2px solid #e2e8f0;
+}
+
+.share-clothes-card.already-shared:hover {
+    transform: none;
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.share-clothes-card.already-shared::before {
+    background: linear-gradient(90deg, transparent, rgba(226, 232, 240, 0.3), transparent);
+}
+
+/* Checkbox Styling */
+.share-clothes-checkbox {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+}
+
+.share-clothes-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #667eea;
+    transform: scale(1.2);
+}
+
+.share-clothes-checkbox input[type="checkbox"]:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Already Shared Label */
+.already-shared-label {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: rgba(239, 68, 68, 0.9);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 10;
+}
+
+.share-clothes-card img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.share-clothes-card-content {
+    text-align: center;
+}
+
+.share-clothes-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: capitalize;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .share-clothes-title-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .share-clothes-actions {
+        align-items: flex-start;
+        flex-direction: row;
+        gap: 15px;
+        min-width: auto;
+    }
+
+    .share-clothes-gallery {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 25px;
+    }
+
+    .share-clothes-card {
+        padding: 20px;
+    }
+
+    .share-clothes-card img {
+        height: 250px;
+    }
+
+    .already-shared-label {
+        font-size: 0.75rem;
+        padding: 5px 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .share-clothes-container {
+        padding: 40px 40px;
+    }
+
+    .share-clothes-title {
+        font-size: 2.8rem;
+    }
+
+    .share-clothes-actions {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .add-to-shared-btn {
+        min-width: auto;
+        width: 100%;
+    }
+
+    .share-clothes-gallery {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 20px;
+    }
+
+    .share-clothes-card {
+        padding: 18px;
+    }
+
+    .share-clothes-card img {
+        height: 220px;
+    }
+
+    .already-shared-label {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .share-clothes-container {
+        padding: 30px 20px;
+    }
+
+    .share-clothes-title {
+        font-size: 2.2rem;
+    }
+
+    .share-clothes-title-section {
+        gap: 15px;
+    }
+
+    .share-clothes-actions {
+        gap: 10px;
+    }
+
+    .selected-count {
+        font-size: 0.9rem;
+        padding: 6px 12px;
+    }
+
+    .add-to-shared-btn {
+        font-size: 0.9rem;
+        padding: 10px 20px;
+    }
+
+    .share-clothes-gallery {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .share-clothes-card {
+        padding: 15px;
+    }
+
+    .share-clothes-card img {
+        height: 200px;
+    }
+
+    .share-clothes-checkbox {
+        top: 10px;
+        right: 10px;
+    }
+
+    .share-clothes-checkbox input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        transform: scale(1.1);
+    }
+
+    .already-shared-label {
+        font-size: 0.65rem;
+        padding: 3px 6px;
+        top: 10px;
+        left: 10px;
+    }
+}
