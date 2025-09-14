@@ -9,6 +9,7 @@ import { socket } from "../client-socket";
 
 import { get, post } from "../utilities";
 import NavBar from "./NavBar";
+import ScrollToTop from "./ScrollToTop";
 
 export const UserContext = createContext(null);
 
@@ -65,6 +66,7 @@ const App = () => {
       <div style={{ marginTop: "70px" }}>
         <Outlet />
       </div>
+      <ScrollToTop />
     </UserContext.Provider>
   );
 };

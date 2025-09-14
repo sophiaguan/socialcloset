@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import "../../utilities.css";
+import BackButton from "../BackButton";
 
 const ImageEdit = () => {
     const location = useLocation();
@@ -59,13 +60,9 @@ const ImageEdit = () => {
 
     if (!imageData) {
         return (
-            <div>
-                <nav style={{ marginBottom: "20px" }}>
-                    <Link to="/my-closet" style={{ textDecoration: "none", color: "#007bff" }}>
-                        ← Back to My Closet
-                    </Link>
-                </nav>
-                <h1>No Image Selected</h1>
+            <div style={{ padding: "40px 60px" }}>
+                <BackButton destination="/my-closet" label="Back to My Closet" />
+                <h1 style={{ marginTop: "20px", marginBottom: "10px" }}>No Image Selected</h1>
                 <p>Please go back to My Closet and upload an image first.</p>
             </div>
         );
@@ -73,13 +70,9 @@ const ImageEdit = () => {
 
     return (
         <div style={{ padding: "40px 60px" }}>
-            <nav style={{ marginBottom: "15px" }}>
-                <Link to="/my-closet" style={{ textDecoration: "none", color: "#007bff" }}>
-                    ← Back to My Closet
-                </Link>
-            </nav>
+            <BackButton destination="/my-closet" label="Back to My Closet" />
 
-            <h1 style={{ marginBottom: "10px" }}>Upload Your Clothes</h1>
+            <h1 style={{ marginTop: "20px", marginBottom: "10px" }}>Upload Your Clothes</h1>
             <p style={{ marginBottom: "20px" }}>Add details about your clothing item.</p>
 
             <div style={{
