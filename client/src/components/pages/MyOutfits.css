@@ -50,16 +50,24 @@
     line-height: 1.5;
 }
 
+/* Main Content Container */
+.outfits-main-content {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
 /* Outfit Combination Section */
 .outfit-combination-section {
     position: relative;
-    z-index: 1;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 25px;
     padding: 40px;
-    margin-bottom: 40px;
     box-shadow:
         0 15px 35px rgba(0, 0, 0, 0.1),
         0 0 0 1px rgba(255, 255, 255, 0.05);
@@ -107,14 +115,10 @@
     max-width: 300px;
     max-height: 400px;
     object-fit: contain;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
-
-.outfit-image:hover {
-    transform: scale(1.02);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    border-radius: 0;
+    box-shadow: none;
+    transition: none;
+    background: transparent;
 }
 
 .carousel-nav-btn {
@@ -209,7 +213,6 @@
 /* Saved Outfits Section */
 .saved-outfits-section {
     position: relative;
-    z-index: 1;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -242,6 +245,44 @@
     line-height: 1.5;
 }
 
+/* Saved Outfits Grid */
+.saved-outfits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.saved-outfit-item {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.saved-outfit-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.outfit-images {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.saved-outfit-image {
+    width: 100%;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
     .my-outfits-container {
@@ -250,6 +291,10 @@
 
     .outfits-title {
         font-size: 3rem;
+    }
+
+    .outfits-main-content {
+        gap: 25px;
     }
 
     .outfit-combination-section,
@@ -264,6 +309,11 @@
     .outfit-image {
         max-width: 250px;
         max-height: 350px;
+    }
+
+    .saved-outfits-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 15px;
     }
 }
 
@@ -280,6 +330,11 @@
         font-size: 1.1rem;
     }
 
+    .outfits-main-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
     .outfit-combination-section,
     .saved-outfits-section {
         padding: 25px;
@@ -292,6 +347,15 @@
     .outfit-image {
         max-width: 200px;
         max-height: 300px;
+    }
+
+    .saved-outfits-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 12px;
+    }
+
+    .saved-outfit-image {
+        height: 60px;
     }
 
     .carousel-nav-btn {
@@ -327,6 +391,10 @@
         font-size: 1rem;
     }
 
+    .outfits-main-content {
+        gap: 15px;
+    }
+
     .outfit-combination-section,
     .saved-outfits-section {
         padding: 20px;
@@ -339,6 +407,15 @@
     .outfit-image {
         max-width: 180px;
         max-height: 250px;
+    }
+
+    .saved-outfits-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 10px;
+    }
+
+    .saved-outfit-image {
+        height: 50px;
     }
 
     .carousel-nav-btn {
