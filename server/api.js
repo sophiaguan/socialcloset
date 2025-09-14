@@ -17,7 +17,7 @@ const path = require("path");
 const User = require("./models/user");
 const Group = require("./models/group");
 
-const { uploadAllFromTemp } = require("./upload");
+const { uploadItem } = require("./upload");
 
 // import authentication library
 const auth = require("./auth");
@@ -102,15 +102,15 @@ router.post('/creategroup', async (req, res) => {
 });
 
 // Upload all processed images in /temp to S3
-router.post("/upload-to-s3", async (req, res) => {
-  try {
-    await uploadAllFromTemp();
-    res.json({ success: true, message: "All images uploaded to S3" });
-  } catch (err) {
-    console.error("❌ Error uploading to S3:", err);
-    res.status(500).json({ success: false, error: "S3 upload failed" });
-  }
-});
+// router.post("/upload-to-s3", async (req, res) => {
+//   try {
+//     await uploadAllFromTemp();
+//     res.json({ success: true, message: "All images uploaded to S3" });
+//   } catch (err) {
+//     console.error("Error uploading to S3:", err);
+//     res.status(500).json({ success: false, error: "S3 upload failed" });
+//   }
+// });
 
 // Upload clothing image and process it
 router.post("/upload-clothing", upload.single('image'), async (req, res) => {
@@ -145,7 +145,7 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
 
     // Call the Python script with the temp file (using conda Python)
     const pythonProcess = spawn('python', [
-      path.join(__dirname, '..', 'removebg.py'),
+      path.join(__dirname, '..', 'pixian.py'), // can change to removebg.py
       tempFilePath,
       outputPath
     ]);
@@ -182,34 +182,24 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
       throw new Error("Python script did not create output file");
     }
 
-    // Save clothing metadata to JSON file
-    const metadataPath = outputPath.replace('.png', '_metadata.json');
-    const clothingData = {
-      id: Date.now(),
-      type: clothingType,
-      originalImage: req.file.originalname,
-      processedImage: path.basename(outputPath),
-      createdAt: new Date().toISOString(),
-      fileSize: fs.statSync(outputPath).size
-    };
-
-    fs.writeFileSync(metadataPath, JSON.stringify(clothingData, null, 2));
-    console.log("Clothing metadata saved:", metadataPath);
-
     // Clean up temp files
     fs.unlinkSync(tempFilePath);
 
     console.log("Image processed successfully:", outputPath);
 
+    try {
+      const s3Url = await uploadItem(outputPath, clothingType, `image_${req.user.googleid}_${req.user.closetSize}.png`);
+      console.log("Image uploaded to S3:", s3Url);
+    } catch (err) {
+      console.error("Error uploading to S3:", err);
+      if (err.stack) console.error(err.stack);
+      res.status(500).json({ success: false, error: "S3 upload failed", details: err.message });
+      return;
+    }
+    fs.unlinkSync(outputPath);
+
     res.json({
-      success: true,
-      message: "Image processed successfully",
-      originalImage: req.file.originalname,
-      processedImage: path.basename(outputPath),
-      metadataFile: path.basename(metadataPath),
-      clothingDetails: {
-        type: clothingType
-      }
+      success: true
     });
 
   } catch (error) {
