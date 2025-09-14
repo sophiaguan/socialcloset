@@ -93,6 +93,12 @@ const MyOutfits = () => {
                     <div className="combination-instructions">
                         <h2>Create Your Outfit</h2>
                         <p>Swipe through tops and bottoms to find your perfect combination!</p>
+                        <div className="outfit-dropdown-container">
+                            <select className="outfit-dropdown">
+                                <option value="">Select Closet</option>
+                                <option value="my-closet">My Closet</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div className="outfit-images-stack">
@@ -139,30 +145,32 @@ const MyOutfits = () => {
 
                 <div className="saved-outfits-section">
                     <h2>Your Saved Outfits</h2>
-                    {savedOutfits.length === 0 ? (
-                        <div className="no-outfits-message">
-                            <p>No outfits saved yet. Create your first outfit!</p>
-                        </div>
-                    ) : (
-                        <div className="saved-outfits-grid">
-                            {savedOutfits.map((outfit) => (
-                                <div key={outfit.id} className="saved-outfit-item">
-                                    <div className="outfit-images">
-                                        <img
-                                            src={outfit.topImage}
-                                            alt="Saved top"
-                                            className="saved-outfit-image"
-                                        />
-                                        <img
-                                            src={outfit.bottomImage}
-                                            alt="Saved bottom"
-                                            className="saved-outfit-image"
-                                        />
+                    <div className="saved-outfits-content">
+                        {savedOutfits.length === 0 ? (
+                            <div className="no-outfits-message">
+                                <p>No outfits saved yet. Create your first outfit!</p>
+                            </div>
+                        ) : (
+                            <div className="saved-outfits-grid">
+                                {savedOutfits.map((outfit) => (
+                                    <div key={outfit.id} className="saved-outfit-item">
+                                        <div className="outfit-images">
+                                            <img
+                                                src={outfit.topImage}
+                                                alt="Saved top"
+                                                className="saved-outfit-image"
+                                            />
+                                            <img
+                                                src={outfit.bottomImage}
+                                                alt="Saved bottom"
+                                                className="saved-outfit-image"
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
