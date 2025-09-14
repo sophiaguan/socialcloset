@@ -1,0 +1,245 @@
+/* Import Google Fonts (same as other pages) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+/* GroupDetail Page Custom Styling */
+.group-detail-container {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: calc(100vh - 70px);
+    padding: 60px 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.group-detail-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Page Header */
+.group-detail-header {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 50px;
+}
+
+.group-detail-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 15px;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.group-detail-subtitle {
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: #4a5568;
+    margin-bottom: 0;
+    line-height: 1.5;
+}
+
+/* Action Buttons */
+.group-detail-actions {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.group-action-btn {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    padding: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    text-align: left;
+}
+
+.group-action-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.6s;
+}
+
+.group-action-btn:hover::before {
+    left: 100%;
+}
+
+.group-action-btn:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Action Icon */
+.action-icon {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    flex-shrink: 0;
+}
+
+/* Action Content */
+.action-content {
+    flex: 1;
+}
+
+.action-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.01em;
+}
+
+.action-content p {
+    font-size: 1rem;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Specific Button Styles */
+.share-clothes-btn .action-icon {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.make-outfits-btn .action-icon {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.all-shared-btn .action-icon {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .group-detail-container {
+        padding: 50px 60px;
+    }
+
+    .group-detail-title {
+        font-size: 3rem;
+    }
+
+    .group-detail-actions {
+        gap: 25px;
+    }
+
+    .group-action-btn {
+        padding: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .group-detail-container {
+        padding: 40px 40px;
+    }
+
+    .group-detail-title {
+        font-size: 2.5rem;
+    }
+
+    .group-detail-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .group-detail-actions {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .group-action-btn {
+        padding: 20px;
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .action-icon {
+        font-size: 2rem;
+        width: 50px;
+        height: 50px;
+    }
+
+    .action-content h3 {
+        font-size: 1.3rem;
+    }
+
+    .action-content p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .group-detail-container {
+        padding: 30px 20px;
+    }
+
+    .group-detail-title {
+        font-size: 2rem;
+    }
+
+    .group-detail-subtitle {
+        font-size: 1rem;
+    }
+
+    .group-detail-actions {
+        gap: 15px;
+    }
+
+    .group-action-btn {
+        padding: 15px;
+    }
+
+    .action-icon {
+        font-size: 1.8rem;
+        width: 45px;
+        height: 45px;
+    }
+
+    .action-content h3 {
+        font-size: 1.2rem;
+    }
+
+    .action-content p {
+        font-size: 0.85rem;
+    }
+}

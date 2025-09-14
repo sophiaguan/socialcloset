@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../../utilities.css";
 import "./AllClothes.css";
 import BackButton from "../BackButton";
 
 const AllClothes = () => {
+    // Scroll to top when component mounts
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     // Hardcoded clothing data (same as MyCloset for now)
     const clothingData = {
         "tops": [

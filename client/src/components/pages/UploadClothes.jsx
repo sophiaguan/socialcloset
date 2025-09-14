@@ -11,6 +11,11 @@ const ImageEdit = () => {
     const [imageName, setImageName] = useState("");
     const [clothingType, setClothingType] = useState("top");
 
+    // Scroll to top when component mounts
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     useEffect(() => {
         if (location.state?.imageData) {
             setImageData(location.state.imageData);

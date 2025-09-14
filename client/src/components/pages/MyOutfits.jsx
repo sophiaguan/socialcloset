@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import "../../utilities.css";
 
 const MyOutfits = () => {
+    // Scroll to top when component mounts
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     return (
         <div style={{ padding: "40px 60px" }}>
             <h1 style={{ marginBottom: "10px" }}>My Outfits</h1>

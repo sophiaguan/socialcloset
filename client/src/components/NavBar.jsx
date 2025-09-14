@@ -13,7 +13,7 @@ const NavBar = () => {
     const navItems = [
         { path: "/my-closet", label: "My Closet" },
         { path: "/my-outfits", label: "My Outfits" },
-        { path: "/friends", label: "Friends" }
+        { path: "/friends", label: "Group Closet" }
     ];
 
     return (
