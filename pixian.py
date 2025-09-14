@@ -10,7 +10,7 @@ def remove_background_pixian(image_path, output_path='pixian_result.png'):
     if not os.path.exists(image_path):
         print(f"Error: Image file '{image_path}' not found")
         return False
-    
+
     try:
         # Pixian.ai API call
         response = requests.post(
@@ -23,7 +23,7 @@ def remove_background_pixian(image_path, output_path='pixian_result.png'):
             },
             auth=('pxhkyis8zj8cysa', 'qnuag772k0brml0dj8lfv469a38sthmtq7e4vses7v035kccpc54')
         )
-        
+
         if response.status_code == requests.codes.ok:
             # Save result
             with open(output_path, 'wb') as out:
@@ -33,38 +33,38 @@ def remove_background_pixian(image_path, output_path='pixian_result.png'):
         else:
             print(f"❌ Error: {response.status_code} - {response.text}")
             return False
-            
+
     except Exception as e:
         print(f"❌ Error processing image: {str(e)}")
         return False
 
 if __name__ == "__main__":
     import sys
-    
+
     # Check if command line arguments are provided
     if len(sys.argv) >= 2:
         input_path = sys.argv[1]
         output_path = sys.argv[2] if len(sys.argv) > 2 else 'pixian_result.png'
-        
-        print(f"🔄 Processing image: {input_path}")
+
+        print(f"Processing image: {input_path}")
         success = remove_background_pixian(input_path, output_path)
         if success:
             print("🎉 Done!")
             sys.exit(0)
         else:
-            print("💥 Failed to remove background")
+            print("Failed to remove background")
             sys.exit(1)
     else:
         # Test with a sample image
         test_image = "sample_image.jpg"  # Change this to your image file
-        
+
         if not os.path.exists(test_image):
             print(f"❌ Please create a test image named '{test_image}' or change the filename in the code")
             print("You can create one with: python -c \"from PIL import Image, ImageDraw; img = Image.new('RGB', (300, 400), 'lightblue'); draw = ImageDraw.Draw(img); draw.rectangle([100, 150, 200, 350], fill='red'); img.save('sample_image.jpg')\"")
         else:
-            print(f"🔄 Processing image: {test_image}")
+            print(f"Processing image: {test_image}")
             success = remove_background_pixian(test_image)
             if success:
                 print("🎉 Done!")
             else:
-                print("💥 Failed to remove background")
+                print("Failed to remove background")
