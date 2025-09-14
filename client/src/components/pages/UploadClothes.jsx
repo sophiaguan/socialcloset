@@ -7,19 +7,17 @@ const ImageEdit = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [imageData, setImageData] = useState(null);
-    const [imageName, setImageName] = useState("");
-    const [clothingType, setClothingType] = useState("top");
+    const [clothingType, setClothingType] = useState("tops");
 
     useEffect(() => {
         if (location.state?.imageData) {
             setImageData(location.state.imageData);
             const defaultName = location.state.imageData.name.split('.')[0];
-            setImageName(defaultName);
         }
     }, [location.state]);
 
     const handleSubmit = async () => {
-        if (!imageData || !imageName.trim()) {
+        if (!imageData) {
             alert("Please provide both an image and a name for the clothing item.");
             return;
         }
@@ -27,11 +25,9 @@ const ImageEdit = () => {
         try {
             const formData = new FormData();
             formData.append('image', imageData.file);
-            formData.append('imageName', imageName);
             formData.append('clothingType', clothingType);
 
             console.log("Submitting:", {
-                imageName,
                 clothingType,
                 fileName: imageData.file.name
             });
@@ -109,31 +105,6 @@ const ImageEdit = () => {
                 <div style={{ flex: '1', minWidth: '300px' }}>
                     <h3>Clothing Details</h3>
 
-                    <div style={{ marginBottom: '20px' }}>
-                        <label htmlFor="imageName" style={{
-                            display: 'block',
-                            marginBottom: '8px',
-                            fontWeight: 'bold'
-                        }}>
-                            Name:
-                        </label>
-                        <input
-                            id="imageName"
-                            type="text"
-                            value={imageName}
-                            onChange={(e) => setImageName(e.target.value)}
-                            placeholder="Enter a name for this clothing item"
-                            style={{
-                                width: '100%',
-                                padding: '12px',
-                                border: '1px solid #ddd',
-                                borderRadius: '6px',
-                                fontSize: '16px',
-                                boxSizing: 'border-box'
-                            }}
-                        />
-                    </div>
-
                     <div style={{ marginBottom: '30px' }}>
                         <label htmlFor="clothingType" style={{
                             display: 'block',
@@ -156,8 +127,8 @@ const ImageEdit = () => {
                                 boxSizing: 'border-box'
                             }}
                         >
-                            <option value="top">Top</option>
-                            <option value="bottom">Bottom</option>
+                            <option value="tops">Top</option>
+                            <option value="bottoms">Bottom</option>
                         </select>
                     </div>
 

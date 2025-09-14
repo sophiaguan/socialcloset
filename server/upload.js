@@ -6,7 +6,7 @@ import path from "path";
 dotenv.config();
 
 const s3 = new S3Client({
-    region: "us-east-1",
+    region: process.env.AWS_REGION,
     credentials: {
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -39,25 +39,25 @@ async function uploadImage(filePath, clothingType, fileName) {
 
 async function uploadAllFromTemp() {
   const tempDir = "./temp/";
-  
+
   try {
     // Read all files in temp directory
     const files = fs.readdirSync(tempDir);
-    
+
     // Filter for image files (image1.png, image2.png, etc.)
     const imageFiles = files.filter(file => file.startsWith('image') && file.endsWith('.png'));
-    
+
     console.log(`Found ${imageFiles.length} images to upload:`, imageFiles);
-    
+
     for (const imageFile of imageFiles) {
       const imagePath = path.join(tempDir, imageFile);
       const metadataFile = imageFile.replace('.png', '_metadata.json');
       const metadataPath = path.join(tempDir, metadataFile);
-      
+
       // Read metadata to get clothing type and name
       let clothingType = "unknown";
       let clothingName = "unknown";
-      
+
       if (fs.existsSync(metadataPath)) {
         const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
         clothingType = metadata.type || "unknown";
@@ -66,13 +66,13 @@ async function uploadAllFromTemp() {
       } else {
         console.log(`No metadata found for ${imageFile}, using defaults`);
       }
-      
+
       // Upload to S3
       const s3Url = await uploadImage(imagePath, clothingType, imageFile);
-      
+
       if (s3Url) {
         console.log(`✅ Uploaded ${imageFile} to: ${s3Url}`);
-        
+
         // Update metadata with S3 URL
         if (fs.existsSync(metadataPath)) {
           const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
@@ -83,9 +83,9 @@ async function uploadAllFromTemp() {
         }
       }
     }
-    
+
     console.log("🎉 All images uploaded successfully!");
-    
+
   } catch (error) {
     console.error("Error uploading images:", error);
   }

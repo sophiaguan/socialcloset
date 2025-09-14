@@ -15,6 +15,7 @@ const path = require("path");
 
 // import models so we can interact with the database
 const User = require("./models/user");
+const Group = require("./models/group");
 
 const { uploadAllFromTemp } = require("./upload");
 
@@ -117,18 +118,23 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ error: "No image file provided" });
     }
+    if (!req.user) {
+      return res.status(401).send('You are not logged in!');
+    }
 
-    const { imageName, clothingType } = req.body;
+    const { clothingType } = req.body;
     const tempFilePath = req.file.path;
+    await User.updateOne({ googleid: req.user.googleid }, {
+      $set: {closetSize: req.user.closetSize + 1}
+    });
 
-    // Generate sequential filename (image1, image2, etc.)
+    // Generate filename
     const tempDir = 'temp/';
-    const existingFiles = fs.readdirSync(tempDir).filter(file => file.startsWith('image') && file.endsWith('.png'));
-    const nextNumber = existingFiles.length + 1;
-    const outputPath = `${tempDir}image${nextNumber}.png`;
+    const outputPath = `${tempDir}image_${req.user.googleid}_${req.user.closetSize}.png`;
+    // ^ will need to change if we implement delete clohtes function
 
     console.log("Processing image:", tempFilePath);
-    console.log("Clothing details:", { imageName, clothingType });
+    console.log("Clothing details:", { clothingType });
 
     // Call Python script directly (more reliable than replicating API call)
     const { spawn } = require('child_process');
@@ -148,16 +154,16 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
     await new Promise((resolve, reject) => {
       pythonProcess.on('close', (code) => {
         if (code === 0) {
-          console.log("✅ Python script completed successfully");
+          console.log("Python script completed successfully");
           resolve();
         } else {
-          console.error(`❌ Python script failed with code ${code}`);
+          console.error(`Python script failed with code ${code}`);
           reject(new Error(`Python script failed with exit code ${code}`));
         }
       });
 
       pythonProcess.on('error', (error) => {
-        console.error("❌ Error running Python script:", error);
+        console.error("Error running Python script:", error);
         reject(error);
       });
 
@@ -180,7 +186,6 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
     const metadataPath = outputPath.replace('.png', '_metadata.json');
     const clothingData = {
       id: Date.now(),
-      name: imageName,
       type: clothingType,
       originalImage: req.file.originalname,
       processedImage: path.basename(outputPath),
@@ -189,12 +194,12 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
     };
 
     fs.writeFileSync(metadataPath, JSON.stringify(clothingData, null, 2));
-    console.log("✅ Clothing metadata saved:", metadataPath);
+    console.log("Clothing metadata saved:", metadataPath);
 
     // Clean up temp files
     fs.unlinkSync(tempFilePath);
 
-    console.log("✅ Image processed successfully:", outputPath);
+    console.log("Image processed successfully:", outputPath);
 
     res.json({
       success: true,
@@ -203,7 +208,6 @@ router.post("/upload-clothing", upload.single('image'), async (req, res) => {
       processedImage: path.basename(outputPath),
       metadataFile: path.basename(metadataPath),
       clothingDetails: {
-        name: imageName,
         type: clothingType
       }
     });
